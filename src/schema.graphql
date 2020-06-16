@@ -5,8 +5,25 @@ type CompletePhoneVerificationResponse {
 }
 
 type Mutation {
-  CompletePhoneVerification(phoneNumber: String!, key: String!): CompletePhoneVerificationResponse!
+  CompletePhoneVerification(phoneNumber: String!, key: String!, nickName: String!, gender: String!, birth: String!): CompletePhoneVerificationResponse!
+  ReportMovement(lastLat: Float, lastLng: Float): ReportMovementResponse!
   StartPhoneVerification(phoneNumber: String!): StartPhoneVerificationResponse
+}
+
+type GetMyProfileResponse {
+  ok: Boolean!
+  error: String
+  user: User
+}
+
+type Query {
+  GetMyProfile: GetMyProfileResponse!
+  user: User
+}
+
+type ReportMovementResponse {
+  ok: Boolean!
+  error: String
 }
 
 type User {
@@ -20,14 +37,9 @@ type User {
   isOnline: Boolean!
   lastLng: Float
   lastLat: Float
-  lastOrientation: Float
   fbId: String
   createdAt: String!
   updatedAt: String
-}
-
-type Query {
-  user: User
 }
 
 type StartPhoneVerificationResponse {

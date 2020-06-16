@@ -8,5 +8,8 @@ type Mutation {
   CompletePhoneVerification(
     phoneNumber: String!
     key: String!
+    nickName: String!
+    gender: String!
+    birth: String!
   ): CompletePhoneVerificationResponse!
 }

@@ -1,4 +1,8 @@
 const privateResolver = resolverFunction => async (parent, args, context, info) => {
+
+    // context (graphql server in context setting value)
+    // info  (fieldName, schema, returnType ...)
+
     if (!context.req.user) {
         throw new Error("No JWT. I refuse to proceed");
     }

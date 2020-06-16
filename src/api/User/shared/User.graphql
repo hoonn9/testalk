@@ -9,7 +9,6 @@ type User {
   isOnline: Boolean!
   lastLng: Float
   lastLat: Float
-  lastOrientation: Float
   fbId: String
   createdAt: String!
   updatedAt: String

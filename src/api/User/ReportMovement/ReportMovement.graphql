@@ -1,0 +1,8 @@
+type ReportMovementResponse {
+  ok: Boolean!
+  error: String
+}
+
+type Mutation {
+  ReportMovement(lastLat: Float, lastLng: Float): ReportMovementResponse!
+}
