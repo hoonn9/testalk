@@ -18,7 +18,14 @@ type GetMyProfileResponse {
 
 type Query {
   GetMyProfile: GetMyProfileResponse!
+  GetUserList(requestTime: String!, means: String!, skip: Int!, take: Int!): GetUserListResponse!
   user: User
+}
+
+type GetUserListResponse {
+  ok: Boolean!
+  error: String
+  users: [User]
 }
 
 type ReportMovementResponse {
@@ -31,6 +38,7 @@ type User {
   nickName: String!
   birth: String!
   gender: String!
+  intro: String!
   profilePhoto: [String]
   phoneNumber: String!
   verifiedPhoneNumber: Boolean!

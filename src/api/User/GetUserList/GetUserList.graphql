@@ -1,0 +1,14 @@
+type GetUserListResponse {
+  ok: Boolean!
+  error: String
+  users: [User]
+}
+
+type Query {
+  GetUserList(
+    requestTime: String!
+    means: String!
+    skip: Int!
+    take: Int!
+  ): GetUserListResponse!
+}

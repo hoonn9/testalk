@@ -16,10 +16,13 @@ class User extends BaseEntity {
     nickName: string;
 
     @Column({ type: "timestamp" })
-    birth: Date;
+    birth: string;
 
     @Column({ type: "text" })
     gender: string;
+
+    @Column({ type: "text", default: "" })
+    intro: string;
 
     @Column({ type: "text" })
     profilePhoto: string[];

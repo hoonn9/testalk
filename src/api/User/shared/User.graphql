@@ -3,6 +3,7 @@ type User {
   nickName: String!
   birth: String!
   gender: String!
+  intro: String!
   profilePhoto: [String]
   phoneNumber: String!
   verifiedPhoneNumber: Boolean!
