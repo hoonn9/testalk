@@ -5,7 +5,7 @@ type CompletePhoneVerificationResponse {
 }
 
 type Mutation {
-  CompletePhoneVerification(phoneNumber: String!, key: String!, nickName: String!, gender: String!, birth: String!): CompletePhoneVerificationResponse!
+  CompletePhoneVerification(phoneNumber: String!, key: String!, nickName: String!, gender: String!, birth: String!, fbId: String, ggId: String): CompletePhoneVerificationResponse!
   ReportMovement(lastLat: Float, lastLng: Float): ReportMovementResponse!
   StartPhoneVerification(phoneNumber: String!): StartPhoneVerificationResponse
 }
@@ -46,6 +46,7 @@ type User {
   lastLng: Float
   lastLat: Float
   fbId: String
+  ggId: String
   createdAt: String!
   updatedAt: String
 }

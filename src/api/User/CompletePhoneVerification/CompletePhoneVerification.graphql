@@ -11,5 +11,7 @@ type Mutation {
     nickName: String!
     gender: String!
     birth: String!
+    fbId: String
+    ggId: String
   ): CompletePhoneVerificationResponse!
 }

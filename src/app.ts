@@ -30,6 +30,7 @@ class App {
 
     private jwt = async (req, res: Response, next: NextFunction): Promise<void> => {
         const token = req.get("X-JWT");
+        console.log(token);
         if (token) {
             const user = await decodeJWT(token);
             if (user) {

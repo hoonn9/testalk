@@ -45,6 +45,9 @@ class User extends BaseEntity {
     @Column({ type: "text", nullable: true })
     fbId: string;
 
+    @Column({ type: "text", nullable: true })
+    ggId: string;
+
     @CreateDateColumn() createdAt: string;
     @UpdateDateColumn() updatedAt: string;
 
