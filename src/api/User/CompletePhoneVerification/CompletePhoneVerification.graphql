@@ -1,6 +1,7 @@
 type CompletePhoneVerificationResponse {
   ok: Boolean!
   error: String
+  userId: Int
   token: String
 }
 

@@ -15,6 +15,7 @@ const resolvers: Resolvers = {
                     return {
                         ok: false,
                         error: "Verification key not valid",
+                        userId: null,
                         token: null
                     }
                 } else {
@@ -25,6 +26,7 @@ const resolvers: Resolvers = {
                 return {
                     ok: false,
                     error: error.message,
+                    userId: null,
                     token: null
                 }
             }
@@ -38,6 +40,7 @@ const resolvers: Resolvers = {
                     return {
                         ok: true,
                         error: null,
+                        userId: user.id,
                         token
                     }
                 } else {
@@ -54,6 +57,7 @@ const resolvers: Resolvers = {
                     return {
                         ok: true,
                         error: null,
+                        userId: user.id,
                         token
                     }
                 }
@@ -61,6 +65,7 @@ const resolvers: Resolvers = {
                 return {
                     ok: false,
                     error: error.message,
+                    userId: null,
                     token: null
                 }
             }

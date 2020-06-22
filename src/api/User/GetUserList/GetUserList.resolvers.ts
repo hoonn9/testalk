@@ -3,16 +3,17 @@ import { Resolvers } from "../../../types/resolvers";
 import privateResolver from "../../../utils/privateResolver";
 import User from "../../../entities/User";
 import { format } from "date-fns"
-import { getRepository, MoreThan, LessThan } from "typeorm";
-const MoreThanDate = (timestamp: string) => MoreThan(format(new Date(parseInt(timestamp)), 'yyyy-MM-dd HH:mm:ss.SSSSSS'))
+import { getRepository, LessThan } from "typeorm";
+//const MoreThanDate = (timestamp: string) => MoreThan(format(new Date(parseInt(timestamp)), 'yyyy-MM-dd HH:mm:ss.SSSSSS'))
 const LessThanDate = (timestamp: string) => LessThan(format(new Date(parseInt(timestamp)), 'yyyy-MM-dd HH:mm:ss.SSSSSS'))
 const resolvers: Resolvers = {
     Query: {
         GetUserList: privateResolver(async (_, args: GetUserListQueryArgs, { req }): Promise<GetUserListResponse> => {
             const user: User = req.user;
             const { requestTime, skip, take } = args;
-            console.log(requestTime);
-            console.log(new Date(parseInt(requestTime)));
+            console.log(skip, take)
+            // console.log(requestTime);
+            // console.log(new Date(parseInt(requestTime)));
 
             if (!user) {
                 return {
@@ -21,15 +22,18 @@ const resolvers: Resolvers = {
                     users: null
                 }
             }
-            console.log(MoreThanDate(requestTime));
+            //console.log(MoreThanDate(requestTime));
 
             try {
                 const users = await getRepository(User).find({
                     where: { updatedAt: LessThanDate(requestTime) },
                     skip,
-                    take
+                    take,
+                    order: {
+                        updatedAt: "DESC"
+                    }
                 })
-                console.log("user: date" + users[0].updatedAt);
+                //console.log(users.find);
                 if (users) {
                     return {
                         ok: true,

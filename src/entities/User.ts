@@ -5,7 +5,10 @@ import {
     Entity,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
+    ManyToMany,
+    JoinTable,
 } from "typeorm";
+import Chat from "./Chat";
 
 @Entity()
 class User extends BaseEntity {
@@ -47,6 +50,10 @@ class User extends BaseEntity {
 
     @Column({ type: "text", nullable: true })
     ggId: string;
+
+    @ManyToMany(type => Chat)
+    @JoinTable()
+    chats: Chat[];
 
     @CreateDateColumn() createdAt: string;
     @UpdateDateColumn() updatedAt: string;
