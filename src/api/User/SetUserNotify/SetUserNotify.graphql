@@ -1,0 +1,8 @@
+type SetUserNotifyResponse {
+  ok: Boolean!
+  error: String
+}
+
+type Mutation {
+  SetUserNotify(token: String!): SetUserNotifyResponse!
+}

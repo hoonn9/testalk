@@ -51,6 +51,10 @@ class User extends BaseEntity {
     @Column({ type: "text", nullable: true })
     ggId: string;
 
+    @Column({ type: "text", nullable: true })
+    notifyId: string;
+
+
     @ManyToMany(type => Chat)
     @JoinTable()
     chats: Chat[];

@@ -44,7 +44,7 @@ const resolvers: Resolvers = {
                             message: null
                         }
                     }
-                } else {
+                } else if (receiveUserId) {
                     const receiveUser = await User.findOne({ id: receiveUserId })
                     if (receiveUser) {
                         const chat = await Chat.create({ users: [user, receiveUser] }).save();
@@ -67,6 +67,12 @@ const resolvers: Resolvers = {
                             error: "receive user is not founded",
                             message: null
                         }
+                    }
+                } else {
+                    return {
+                        ok: false,
+                        error: "it's wrong requested.",
+                        message: null
                     }
                 }
             } catch (error) {
