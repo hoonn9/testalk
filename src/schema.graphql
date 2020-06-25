@@ -1,3 +1,16 @@
+type GetChatMessagesResponse {
+  ok: Boolean!
+  error: String
+  messages: [Message]
+}
+
+type Query {
+  GetChatMessages(chatId: Int!, requestTime: String): GetChatMessagesResponse
+  GetMyProfile: GetMyProfileResponse!
+  GetUserList(requestTime: String!, means: String!, skip: Int!, take: Int!): GetUserListResponse!
+  user: User
+}
+
 type Subscription {
   MessageSubscription: Message
 }
@@ -19,6 +32,7 @@ type Mutation {
 type Chat {
   id: Int!
   users: [User!]!
+  messages: [Message!]
   createdAt: String!
   updatedAt: String
 }
@@ -27,6 +41,7 @@ type Message {
   id: Int!
   text: String!
   userId: Int
+  chat: Chat!
   chatId: Int
   createdAt: String!
   updatedAt: String
@@ -42,12 +57,6 @@ type CompletePhoneVerificationResponse {
 type GetMyProfileResponse {
   ok: Boolean!
   error: String
-  user: User
-}
-
-type Query {
-  GetMyProfile: GetMyProfileResponse!
-  GetUserList(requestTime: String!, means: String!, skip: Int!, take: Int!): GetUserListResponse!
   user: User
 }
 

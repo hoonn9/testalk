@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Resolvers } from "../../../types/resolvers";
 import { SendChatMessageMutationArgs, SendChatMessageResponse } from "../../../types/graph";
 import User from "../../../entities/User";
@@ -17,14 +18,28 @@ const resolvers: Resolvers = {
                     if (chat) {
                         for (let i = 0; i < chat.users.length; i++) {
                             if (user.id === chat.users[i].id) {
+
                                 const message = await Message.create({
                                     text,
                                     userId: user.id,
-                                    chatId: chatId
+                                    chat
                                 }).save();
                                 pubSub.publish("newChatMessage", {
                                     MessageSubscription: message
                                 })
+                                for (let j = 0; j < chat.users.length; j++) {
+                                    if (j !== i) {
+                                        await axios.post(
+                                            "https://exp.host/--/api/v2/push/send",
+                                            {
+                                                to: chat.users[j].notifyId,
+                                                title: "NEW message!",
+                                                body: text,
+                                                badge: 1,
+                                            }
+                                        );
+                                    }
+                                }
                                 return {
                                     ok: true,
                                     error: null,
@@ -51,11 +66,21 @@ const resolvers: Resolvers = {
                         const message = await Message.create({
                             text,
                             userId: user.id,
-                            chatId: chat.id
+                            chat
                         }).save();
                         pubSub.publish("newChatMessage", {
                             MessageSubscription: message
                         })
+
+                        await axios.post(
+                            "https://exp.host/--/api/v2/push/send",
+                            {
+                                to: receiveUser.notifyId,
+                                title: "NEW message!",
+                                body: text,
+                                badge: 1,
+                            }
+                        );
                         return {
                             ok: true,
                             error: null,
