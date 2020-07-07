@@ -5,6 +5,9 @@ import logger from "morgan";
 import schema from "./schema"
 import { NextFunction, Response } from "express";
 import decodeJWT from "./utils/decodeJWT";
+import firebase from "firebase-admin";
+
+const firebaseAccount = require("../testalk-2b9dc-firebase-adminsdk-icfhw-1122c70469.json");
 
 class App {
     public app: GraphQLServer;
@@ -24,6 +27,9 @@ class App {
             }
         });
         this.middlewares();
+        firebase.initializeApp({
+            credential: firebase.credential.cert(firebaseAccount)
+        })
     }
 
     private middlewares = (): void => {
@@ -34,8 +40,9 @@ class App {
     }
 
     private jwt = async (req, res: Response, next: NextFunction): Promise<void> => {
+        // const testToken = createJWT(14);
+        // console.log(testToken);
         const token = req.get("X-JWT");
-        console.log(token);
         if (token) {
             const user = await decodeJWT(token);
             if (user) {

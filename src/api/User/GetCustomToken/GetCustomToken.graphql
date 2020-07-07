@@ -1,0 +1,16 @@
+type GetCustomTokenResponse {
+  ok: Boolean!
+  error: String
+  token: String
+}
+
+enum CustomTokenMeansOptions {
+  KAKAO
+}
+
+type Query {
+  GetCustomToken(
+    means: CustomTokenMeansOptions!
+    socialId: String!
+  ): GetCustomTokenResponse
+}

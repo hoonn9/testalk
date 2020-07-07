@@ -3,16 +3,15 @@ type CompletePhoneVerificationResponse {
   error: String
   userId: Int
   token: String
+  isNew: Boolean
 }
 
 type Mutation {
   CompletePhoneVerification(
     phoneNumber: String!
     key: String!
-    nickName: String!
-    gender: String!
-    birth: String!
     fbId: String
     ggId: String
+    kkId: String
   ): CompletePhoneVerificationResponse!
 }

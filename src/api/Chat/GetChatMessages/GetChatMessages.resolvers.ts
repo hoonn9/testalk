@@ -13,9 +13,11 @@ const resolvers: Resolvers = {
         GetChatMessages: privateResolver(async (_, args: GetChatMessagesQueryArgs, { req }): Promise<GetChatMessagesResponse> => {
             const user: User = req.user;
             const { chatId, requestTime } = args;
-            // console.log(requestTime);
-            // console.log(new Date(parseInt(requestTime)));
-
+            if (requestTime) {
+                console.log("챗Id", chatId, "userId", user.id, "requestTime", new Date(parseInt(requestTime)))
+            } else {
+                console.log("챗Id", chatId, "userId", user.id, "requestTime", requestTime)
+            }
             if (!user) {
                 return {
                     ok: false,
@@ -61,13 +63,13 @@ const resolvers: Resolvers = {
                     //     relations: ["messages"],
                     //     where: { id: chatId, "chat.messages": { createdAt: MoreThanDate(requestTime) } }
                     // })
-                    console.log(chat);
+                    console.log("requestTime was ", chat);
 
                     if (chat) {
                         return {
                             ok: true,
                             error: null,
-                            messages: null
+                            messages: chat.messages
                         }
                     } else {
                         return {
@@ -77,18 +79,31 @@ const resolvers: Resolvers = {
                         }
                     }
                 } else {
-                    return {
-                        ok: true,
-                        error: null,
-                        messages: null
+                    const chat = await getRepository(Chat).findOne({
+                        relations: ["messages"],
+                        where: { id: chatId }
+                    })
+                    console.log("requestTime wasn't ", chat);
+                    if (chat) {
+                        return {
+                            ok: true,
+                            error: null,
+                            messages: chat.messages
+                        }
+                    } else {
+                        return {
+                            ok: false,
+                            error: "Can not get your chat",
+                            messages: null
+                        }
                     }
+
                 }
 
             } catch (error) {
-                console.log(error);
                 return {
                     ok: false,
-                    error: "Can not get user list",
+                    error: error.message,
                     messages: null
                 }
             }

@@ -8,8 +8,6 @@ const resolvers = {
             subscribe: withFilter(
                 (_, __, { pubSub }) => pubSub.asyncIterator("newChatMessage"),
                 async (payload, _, { currentUser }) => {
-                    console.log(currentUser);
-                    console.log(payload);
                     const user: User = currentUser;
                     const {
                         MessageSubscription: { chatId }

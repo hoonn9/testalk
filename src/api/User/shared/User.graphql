@@ -12,6 +12,7 @@ type User {
   lastLat: Float
   fbId: String
   ggId: String
+  kkId: String
   notifyId: String
   chats: [Chat!]
   createdAt: String!

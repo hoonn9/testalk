@@ -52,6 +52,9 @@ class User extends BaseEntity {
     ggId: string;
 
     @Column({ type: "text", nullable: true })
+    kkId: string;
+
+    @Column({ type: "text", nullable: true })
     notifyId: string;
 
 

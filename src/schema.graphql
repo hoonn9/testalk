@@ -6,6 +6,7 @@ type GetChatMessagesResponse {
 
 type Query {
   GetChatMessages(chatId: Int!, requestTime: String): GetChatMessagesResponse
+  GetCustomToken(means: CustomTokenMeansOptions!, socialId: String!): GetCustomTokenResponse
   GetMyProfile: GetMyProfileResponse!
   GetUserList(requestTime: String!, means: String!, skip: Int!, take: Int!): GetUserListResponse!
   user: User
@@ -23,7 +24,7 @@ type SendChatMessageResponse {
 
 type Mutation {
   SendChatMessage(chatId: Int, receiveUserId: Int, text: String!): SendChatMessageResponse!
-  CompletePhoneVerification(phoneNumber: String!, key: String!, nickName: String!, gender: String!, birth: String!, fbId: String, ggId: String): CompletePhoneVerificationResponse!
+  CompletePhoneVerification(phoneNumber: String!, key: String!, fbId: String, ggId: String, kkId: String): CompletePhoneVerificationResponse!
   ReportMovement(lastLat: Float, lastLng: Float): ReportMovementResponse!
   SetUserNotify(token: String!): SetUserNotifyResponse!
   StartPhoneVerification(phoneNumber: String!): StartPhoneVerificationResponse
@@ -52,6 +53,17 @@ type CompletePhoneVerificationResponse {
   error: String
   userId: Int
   token: String
+  isNew: Boolean
+}
+
+type GetCustomTokenResponse {
+  ok: Boolean!
+  error: String
+  token: String
+}
+
+enum CustomTokenMeansOptions {
+  KAKAO
 }
 
 type GetMyProfileResponse {
@@ -90,6 +102,7 @@ type User {
   lastLat: Float
   fbId: String
   ggId: String
+  kkId: String
   notifyId: String
   chats: [Chat!]
   createdAt: String!
