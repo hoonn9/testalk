@@ -1,12 +1,9 @@
 import firebase from "firebase-admin";
 
-export const sendFCM = (title: string, body: string, data: { [key: string]: string; }, token: string) => {
-    return firebase.messaging().send({
-        notification: {
-            title,
-            body
-        },
-        data,
-        token
+export const sendFCM = (data: { [key: string]: string; }, token: string) => {
+    return firebase.messaging().sendToDevice(token, {
+        data
+    }, {
+        priority: "high",
     })
 }

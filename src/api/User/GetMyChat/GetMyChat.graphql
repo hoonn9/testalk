@@ -1,0 +1,9 @@
+type GetMyChatResponse {
+  ok: Boolean!
+  error: String
+  chat: [Chat]
+}
+
+type Query {
+  GetMyChat: GetMyChatResponse!
+}

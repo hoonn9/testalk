@@ -6,9 +6,11 @@ type GetChatMessagesResponse {
 
 type Query {
   GetChatMessages(chatId: Int!, requestTime: String): GetChatMessagesResponse
-  GetCustomToken(means: CustomTokenMeansOptions!, socialId: String!): GetCustomTokenResponse
+  GetCustomToken(means: CustomTokenMeansOptions!, socialId: String!): GetCustomTokenResponse!
+  GetMyChat: GetMyChatResponse!
   GetMyProfile: GetMyProfileResponse!
   GetUserList(requestTime: String!, means: String!, skip: Int!, take: Int!): GetUserListResponse!
+  GetUserProfile(id: Int!): GetUserProfileResponse!
   user: User
 }
 
@@ -66,6 +68,12 @@ enum CustomTokenMeansOptions {
   KAKAO
 }
 
+type GetMyChatResponse {
+  ok: Boolean!
+  error: String
+  chat: [Chat]
+}
+
 type GetMyProfileResponse {
   ok: Boolean!
   error: String
@@ -76,6 +84,12 @@ type GetUserListResponse {
   ok: Boolean!
   error: String
   users: [User]
+}
+
+type GetUserProfileResponse {
+  ok: Boolean!
+  error: String
+  user: User
 }
 
 type ReportMovementResponse {

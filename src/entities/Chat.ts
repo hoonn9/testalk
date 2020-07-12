@@ -18,13 +18,12 @@ class Chat extends BaseEntity {
     @OneToMany(type => Message, message => message.chat)
     messages: Message[];
 
-    @ManyToMany(type => User)
+    @ManyToMany(type => User, user => user.chats)
     @JoinTable()
     users: User[];
 
     @CreateDateColumn() createdAt: string;
     @UpdateDateColumn() updatedAt: string;
-
 }
 
 export default Chat;

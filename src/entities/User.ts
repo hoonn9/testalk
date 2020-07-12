@@ -58,7 +58,7 @@ class User extends BaseEntity {
     notifyId: string;
 
 
-    @ManyToMany(type => Chat)
+    @ManyToMany(type => Chat, chat => chat.users)
     @JoinTable()
     chats: Chat[];
 

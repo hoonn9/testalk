@@ -1,4 +1,3 @@
-import axios from "axios";
 import { Resolvers } from "../../../types/resolvers";
 import { SendChatMessageMutationArgs, SendChatMessageResponse } from "../../../types/graph";
 import User from "../../../entities/User";
@@ -31,7 +30,8 @@ const resolvers: Resolvers = {
                                 console.log("Message createdAt:", message.createdAt);
                                 for (let j = 0; j < chat.users.length; j++) {
                                     if (j !== i) {
-                                        sendFCM(user.nickName, text, {
+                                        sendFCM({
+                                            nickName: user.nickName,
                                             chatId: chat.id.toString(),
                                             messageId: message.id.toString(),
                                             userId: message.userId.toString(),
@@ -43,27 +43,6 @@ const resolvers: Resolvers = {
                                         }).catch((error) => {
                                             //실패
                                         })
-                                        // await axios.post(
-                                        //     "https://exp.host/--/api/v2/push/send",
-                                        //     {
-                                        //         to: chat.users[j].notifyId,
-                                        //         title: user.nickName,
-                                        //         body: text,
-                                        //         badge: 1,
-                                        //         data: {
-                                        //             chatId: chat.id,
-                                        //             messageId: message.id,
-                                        //             userId: message.userId,
-                                        //             receiveUserId,
-                                        //             content: message.text,
-                                        //             createdAt: new Date(message.createdAt).getTime()
-                                        //         }
-                                        //     }
-                                        // ).then((response) => {
-                                        //     console.log(response.status);
-                                        // }).catch(error => {
-                                        //     console.log(error);
-                                        // });
                                     }
                                 }
                                 return {
@@ -89,6 +68,17 @@ const resolvers: Resolvers = {
                     const receiveUser = await User.findOne({ id: receiveUserId })
                     if (receiveUser) {
                         const chat = await Chat.create({ users: [user, receiveUser] }).save();
+                        // if (!receiveUser.chats.includes(chat)) {
+                        //     console.log(chat);
+                        //     receiveUser.chats.push(chat);
+                        //     receiveUser.save();
+                        // }
+
+                        // if (!user.chats.includes(chat)) {
+                        //     console.log(chat);
+                        //     user.chats.push(chat);
+                        //     user.save();
+                        // }
                         const message = await Message.create({
                             text,
                             userId: user.id,
@@ -98,22 +88,20 @@ const resolvers: Resolvers = {
                             MessageSubscription: message
                         })
 
-                        await axios.post(
-                            "https://exp.host/--/api/v2/push/send",
-                            {
-                                to: receiveUser.notifyId,
-                                title: user.nickName,
-                                body: text,
-                                badge: 1,
-                                data: {
-                                    chatId: chat.id,
-                                    userId: message.userId,
-                                    receiveUserId,
-                                    content: message.text,
-                                    createdAt: new Date(message.createdAt).getTime()
-                                }
-                            }
-                        );
+                        sendFCM({
+                            nickName: user.nickName,
+                            chatId: chat.id.toString(),
+                            messageId: message.id.toString(),
+                            userId: message.userId.toString(),
+                            receiveUserId: receiveUserId?.toString() || "",
+                            content: message.text,
+                            createdAt: new Date(message.createdAt).getTime().toString()
+                        }, receiveUser.notifyId).then((response) => {
+                            //성공
+                        }).catch((error) => {
+                            //실패
+                        })
+
                         return {
                             ok: true,
                             error: null,
