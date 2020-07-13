@@ -10,7 +10,6 @@ const resolvers: Resolvers = {
             try {
                 if (user) {
                     const my = await User.findOne({ id: user.id }, { relations: ["chats"] });
-                    console.log(my)
                     if (my) {
                         return {
                             ok: true,

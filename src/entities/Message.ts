@@ -16,7 +16,7 @@ class Message extends BaseEntity {
     @Column({ type: "int" })
     userId: number;
 
-    @ManyToOne(type => Chat, chat => chat.messages)
+    @ManyToOne(type => Chat, chat => chat.messages, { onDelete: "CASCADE" })
     chat: Chat;
 
     @Column({ nullable: true })

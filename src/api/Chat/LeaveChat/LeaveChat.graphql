@@ -1,0 +1,8 @@
+type LeaveChatResponse {
+  ok: Boolean!
+  error: String
+}
+
+type Mutation {
+  LeaveChat(id: Int!): LeaveChatResponse!
+}

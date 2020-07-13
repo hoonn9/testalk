@@ -68,17 +68,7 @@ const resolvers: Resolvers = {
                     const receiveUser = await User.findOne({ id: receiveUserId })
                     if (receiveUser) {
                         const chat = await Chat.create({ users: [user, receiveUser] }).save();
-                        // if (!receiveUser.chats.includes(chat)) {
-                        //     console.log(chat);
-                        //     receiveUser.chats.push(chat);
-                        //     receiveUser.save();
-                        // }
 
-                        // if (!user.chats.includes(chat)) {
-                        //     console.log(chat);
-                        //     user.chats.push(chat);
-                        //     user.save();
-                        // }
                         const message = await Message.create({
                             text,
                             userId: user.id,
