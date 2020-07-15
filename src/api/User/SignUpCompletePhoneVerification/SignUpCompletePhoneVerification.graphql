@@ -1,0 +1,19 @@
+type SignUpCompletePhoneVerificationResponse {
+  ok: Boolean!
+  error: String
+  userId: Int
+  token: String
+}
+
+type Mutation {
+  SignUpCompletePhoneVerification(
+    phoneNumber: String!
+    key: String!
+    fbId: String
+    ggId: String
+    kkId: String
+    nickName: String!
+    gender: String!
+    birth: String!
+  ): SignUpCompletePhoneVerificationResponse!
+}

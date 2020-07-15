@@ -5,5 +5,5 @@ type GetChatMessagesResponse {
 }
 
 type Query {
-  GetChatMessages(chatId: Int!, requestTime: String): GetChatMessagesResponse
+  GetChatMessages(chatId: Int!, requestTime: String): GetChatMessagesResponse!
 }

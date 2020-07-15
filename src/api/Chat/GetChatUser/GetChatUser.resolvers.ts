@@ -6,7 +6,7 @@ import Chat from "../../../entities/Chat";
 
 const resolvers: Resolvers = {
     Query: {
-        GetChatMessages: privateResolver(async (_, args: GetChatUserQueryArgs, { req }): Promise<GetChatUserResponse> => {
+        GetChatUser: privateResolver(async (_, args: GetChatUserQueryArgs, { req }): Promise<GetChatUserResponse> => {
             const user: User = req.user;
             const { id } = args;
             try {

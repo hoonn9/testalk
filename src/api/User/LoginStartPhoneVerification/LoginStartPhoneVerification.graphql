@@ -1,0 +1,10 @@
+type LoginStartPhoneVerificationResponse {
+  ok: Boolean!
+  error: String
+}
+
+type Mutation {
+  LoginStartPhoneVerification(
+    phoneNumber: String!
+  ): LoginStartPhoneVerificationResponse
+}

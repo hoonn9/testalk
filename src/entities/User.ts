@@ -7,13 +7,14 @@ import {
     UpdateDateColumn,
     ManyToMany,
     JoinTable,
+    OneToMany,
 } from "typeorm";
 import Chat from "./Chat";
+import File from "./File";
 
 @Entity()
 class User extends BaseEntity {
     @PrimaryGeneratedColumn() id: number;
-
 
     @Column({ type: "text" })
     nickName: string;
@@ -27,8 +28,11 @@ class User extends BaseEntity {
     @Column({ type: "text", default: "" })
     intro: string;
 
-    @Column({ type: "text" })
-    profilePhoto: string[];
+    @OneToMany(type => File, file => file.user)
+    profilePhoto: File[];
+
+    // @Column({ type: "text" })
+    // profilePhoto: File[];
 
     @Column({ type: "text" })
     phoneNumber: string;
@@ -57,10 +61,12 @@ class User extends BaseEntity {
     @Column({ type: "text", nullable: true })
     notifyId: string;
 
-
     @ManyToMany(type => Chat, chat => chat.users)
     @JoinTable()
     chats: Chat[];
+
+    @OneToMany(type => File, file => file.user)
+    files: File[];
 
     @CreateDateColumn() createdAt: string;
     @UpdateDateColumn() updatedAt: string;

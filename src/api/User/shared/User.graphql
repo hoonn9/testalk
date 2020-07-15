@@ -4,7 +4,7 @@ type User {
   birth: String!
   gender: String!
   intro: String!
-  profilePhoto: [String]
+  profilePhoto: [File!]
   phoneNumber: String!
   verifiedPhoneNumber: Boolean!
   isOnline: Boolean!
@@ -15,6 +15,7 @@ type User {
   kkId: String
   notifyId: String
   chats: [Chat!]
+  files: [File!]
   createdAt: String!
   updatedAt: String
 }

@@ -1,9 +1,9 @@
-export const typeDefs = ["type GetChatMessagesResponse {\n  ok: Boolean!\n  error: String\n  messages: [Message]\n}\n\ntype Query {\n  GetChatMessages(chatId: Int!, requestTime: String): GetChatMessagesResponse\n  GetChatUser(id: Int!): GetChatUserResponse\n  GetCustomToken(means: CustomTokenMeansOptions!, socialId: String!): GetCustomTokenResponse!\n  GetMyChat: GetMyChatResponse!\n  GetMyProfile: GetMyProfileResponse!\n  GetUserList(requestTime: String!, means: String!, skip: Int!, take: Int!): GetUserListResponse!\n  GetUserProfile(id: Int!): GetUserProfileResponse!\n  user: User\n}\n\ntype GetChatUserResponse {\n  ok: Boolean!\n  error: String\n  user: User\n}\n\ntype LeaveChatResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype Mutation {\n  LeaveChat(id: Int!): LeaveChatResponse!\n  SendChatMessage(chatId: Int, receiveUserId: Int, text: String!): SendChatMessageResponse!\n  CompletePhoneVerification(phoneNumber: String!, key: String!, fbId: String, ggId: String, kkId: String): CompletePhoneVerificationResponse!\n  ReportMovement(lastLat: Float, lastLng: Float): ReportMovementResponse!\n  SetUserNotify(token: String!): SetUserNotifyResponse!\n  StartPhoneVerification(phoneNumber: String!): StartPhoneVerificationResponse\n}\n\ntype Subscription {\n  MessageSubscription: Message\n}\n\ntype SendChatMessageResponse {\n  ok: Boolean!\n  error: String\n  message: Message\n}\n\ntype Chat {\n  id: Int!\n  users: [User!]!\n  messages: [Message!]\n  createdAt: String!\n  updatedAt: String\n}\n\ntype Message {\n  id: Int!\n  text: String!\n  userId: Int\n  chat: Chat!\n  chatId: Int\n  createdAt: String!\n  updatedAt: String\n}\n\ntype CompletePhoneVerificationResponse {\n  ok: Boolean!\n  error: String\n  userId: Int\n  token: String\n  isNew: Boolean\n}\n\ntype GetCustomTokenResponse {\n  ok: Boolean!\n  error: String\n  token: String\n}\n\nenum CustomTokenMeansOptions {\n  KAKAO\n}\n\ntype GetMyChatResponse {\n  ok: Boolean!\n  error: String\n  chat: [Chat]\n}\n\ntype GetMyProfileResponse {\n  ok: Boolean!\n  error: String\n  user: User\n}\n\ntype GetUserListResponse {\n  ok: Boolean!\n  error: String\n  users: [User]\n}\n\ntype GetUserProfileResponse {\n  ok: Boolean!\n  error: String\n  user: User\n}\n\ntype ReportMovementResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype SetUserNotifyResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype User {\n  id: Int!\n  nickName: String!\n  birth: String!\n  gender: String!\n  intro: String!\n  profilePhoto: [String]\n  phoneNumber: String!\n  verifiedPhoneNumber: Boolean!\n  isOnline: Boolean!\n  lastLng: Float\n  lastLat: Float\n  fbId: String\n  ggId: String\n  kkId: String\n  notifyId: String\n  chats: [Chat!]\n  createdAt: String!\n  updatedAt: String\n}\n\ntype StartPhoneVerificationResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype Verification {\n  id: Int!\n  target: String!\n  payload: String!\n  key: String!\n  verified: Boolean!\n  createdAt: String!\n  updatedAt: String\n}\n"];
+export const typeDefs = ["type GetChatMessagesResponse {\n  ok: Boolean!\n  error: String\n  messages: [Message]\n}\n\ntype Query {\n  GetChatMessages(chatId: Int!, requestTime: String): GetChatMessagesResponse!\n  GetChatUser(id: Int!): GetChatUserResponse!\n  GetCustomToken(means: CustomTokenMeansOptions!, socialId: String!): GetCustomTokenResponse!\n  GetMyChat: GetMyChatResponse!\n  GetMyProfile: GetMyProfileResponse!\n  GetUserList(requestTime: String!, means: String!, skip: Int!, take: Int!): GetUserListResponse!\n  GetUserProfile(id: Int!): GetUserProfileResponse!\n  user: User\n}\n\ntype GetChatUserResponse {\n  ok: Boolean!\n  error: String\n  user: User\n}\n\ntype LeaveChatResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype Mutation {\n  LeaveChat(id: Int!): LeaveChatResponse!\n  SendChatMessage(chatId: Int, receiveUserId: Int, text: String!): SendChatMessageResponse!\n  LoginCompletePhoneVerification(phoneNumber: String!, key: String!): LoginCompletePhoneVerificationResponse!\n  LoginStartPhoneVerification(phoneNumber: String!): LoginStartPhoneVerificationResponse\n  ReportMovement(lastLat: Float, lastLng: Float): ReportMovementResponse!\n  SetUserNotify(token: String!): SetUserNotifyResponse!\n  SignUpCompletePhoneVerification(phoneNumber: String!, key: String!, fbId: String, ggId: String, kkId: String, nickName: String!, gender: String!, birth: String!): SignUpCompletePhoneVerificationResponse!\n  SignUpStartPhoneVerification(phoneNumber: String!): SignUpStartPhoneVerificationResponse!\n}\n\ntype Subscription {\n  MessageSubscription: Message\n}\n\ntype SendChatMessageResponse {\n  ok: Boolean!\n  error: String\n  message: Message\n}\n\ntype Chat {\n  id: Int!\n  users: [User!]!\n  messages: [Message]\n  createdAt: String!\n  updatedAt: String\n}\n\ntype File {\n  id: Int!\n  user: User!\n  userId: Int!\n  url: String!\n  key: String!\n  createdAt: String!\n  updatedAt: String\n}\n\ntype Message {\n  id: Int!\n  text: String!\n  userId: Int\n  chat: Chat!\n  chatId: Int\n  createdAt: String!\n  updatedAt: String\n}\n\ntype GetCustomTokenResponse {\n  ok: Boolean!\n  error: String\n  token: String\n}\n\nenum CustomTokenMeansOptions {\n  KAKAO\n}\n\ntype GetMyChatResponse {\n  ok: Boolean!\n  error: String\n  chat: [Chat]\n}\n\ntype GetMyProfileResponse {\n  ok: Boolean!\n  error: String\n  user: User\n}\n\ntype GetUserListResponse {\n  ok: Boolean!\n  error: String\n  users: [User]\n}\n\ntype GetUserProfileResponse {\n  ok: Boolean!\n  error: String\n  user: User\n}\n\ntype LoginCompletePhoneVerificationResponse {\n  ok: Boolean!\n  error: String\n  userId: Int\n  token: String\n}\n\ntype LoginStartPhoneVerificationResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype ReportMovementResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype SetUserNotifyResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype User {\n  id: Int!\n  nickName: String!\n  birth: String!\n  gender: String!\n  intro: String!\n  profilePhoto: [File!]\n  phoneNumber: String!\n  verifiedPhoneNumber: Boolean!\n  isOnline: Boolean!\n  lastLng: Float\n  lastLat: Float\n  fbId: String\n  ggId: String\n  kkId: String\n  notifyId: String\n  chats: [Chat!]\n  files: [File!]\n  createdAt: String!\n  updatedAt: String\n}\n\ntype SignUpCompletePhoneVerificationResponse {\n  ok: Boolean!\n  error: String\n  userId: Int\n  token: String\n}\n\ntype SignUpStartPhoneVerificationResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype Verification {\n  id: Int!\n  target: String!\n  payload: String!\n  key: String!\n  verified: Boolean!\n  createdAt: String!\n  updatedAt: String\n}\n"];
 /* tslint:disable */
 
 export interface Query {
-  GetChatMessages: GetChatMessagesResponse | null;
-  GetChatUser: GetChatUserResponse | null;
+  GetChatMessages: GetChatMessagesResponse;
+  GetChatUser: GetChatUserResponse;
   GetCustomToken: GetCustomTokenResponse;
   GetMyChat: GetMyChatResponse;
   GetMyProfile: GetMyProfileResponse;
@@ -56,7 +56,7 @@ export interface Message {
 export interface Chat {
   id: number;
   users: Array<User>;
-  messages: Array<Message>;
+  messages: Array<Message> | null;
   createdAt: string;
   updatedAt: string | null;
 }
@@ -67,7 +67,7 @@ export interface User {
   birth: string;
   gender: string;
   intro: string;
-  profilePhoto: Array<string> | null;
+  profilePhoto: Array<File>;
   phoneNumber: string;
   verifiedPhoneNumber: boolean;
   isOnline: boolean;
@@ -78,6 +78,17 @@ export interface User {
   kkId: string | null;
   notifyId: string | null;
   chats: Array<Chat>;
+  files: Array<File>;
+  createdAt: string;
+  updatedAt: string | null;
+}
+
+export interface File {
+  id: number;
+  user: User;
+  userId: number;
+  url: string;
+  key: string;
   createdAt: string;
   updatedAt: string | null;
 }
@@ -123,10 +134,12 @@ export interface GetUserProfileResponse {
 export interface Mutation {
   LeaveChat: LeaveChatResponse;
   SendChatMessage: SendChatMessageResponse;
-  CompletePhoneVerification: CompletePhoneVerificationResponse;
+  LoginCompletePhoneVerification: LoginCompletePhoneVerificationResponse;
+  LoginStartPhoneVerification: LoginStartPhoneVerificationResponse | null;
   ReportMovement: ReportMovementResponse;
   SetUserNotify: SetUserNotifyResponse;
-  StartPhoneVerification: StartPhoneVerificationResponse | null;
+  SignUpCompletePhoneVerification: SignUpCompletePhoneVerificationResponse;
+  SignUpStartPhoneVerification: SignUpStartPhoneVerificationResponse;
 }
 
 export interface LeaveChatMutationArgs {
@@ -139,12 +152,13 @@ export interface SendChatMessageMutationArgs {
   text: string;
 }
 
-export interface CompletePhoneVerificationMutationArgs {
+export interface LoginCompletePhoneVerificationMutationArgs {
   phoneNumber: string;
   key: string;
-  fbId: string | null;
-  ggId: string | null;
-  kkId: string | null;
+}
+
+export interface LoginStartPhoneVerificationMutationArgs {
+  phoneNumber: string;
 }
 
 export interface ReportMovementMutationArgs {
@@ -156,7 +170,18 @@ export interface SetUserNotifyMutationArgs {
   token: string;
 }
 
-export interface StartPhoneVerificationMutationArgs {
+export interface SignUpCompletePhoneVerificationMutationArgs {
+  phoneNumber: string;
+  key: string;
+  fbId: string | null;
+  ggId: string | null;
+  kkId: string | null;
+  nickName: string;
+  gender: string;
+  birth: string;
+}
+
+export interface SignUpStartPhoneVerificationMutationArgs {
   phoneNumber: string;
 }
 
@@ -171,12 +196,16 @@ export interface SendChatMessageResponse {
   message: Message | null;
 }
 
-export interface CompletePhoneVerificationResponse {
+export interface LoginCompletePhoneVerificationResponse {
   ok: boolean;
   error: string | null;
   userId: number | null;
   token: string | null;
-  isNew: boolean | null;
+}
+
+export interface LoginStartPhoneVerificationResponse {
+  ok: boolean;
+  error: string | null;
 }
 
 export interface ReportMovementResponse {
@@ -189,7 +218,14 @@ export interface SetUserNotifyResponse {
   error: string | null;
 }
 
-export interface StartPhoneVerificationResponse {
+export interface SignUpCompletePhoneVerificationResponse {
+  ok: boolean;
+  error: string | null;
+  userId: number | null;
+  token: string | null;
+}
+
+export interface SignUpStartPhoneVerificationResponse {
   ok: boolean;
   error: string | null;
 }

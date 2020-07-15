@@ -1,0 +1,13 @@
+type LoginCompletePhoneVerificationResponse {
+  ok: Boolean!
+  error: String
+  userId: Int
+  token: String
+}
+
+type Mutation {
+  LoginCompletePhoneVerification(
+    phoneNumber: String!
+    key: String!
+  ): LoginCompletePhoneVerificationResponse!
+}

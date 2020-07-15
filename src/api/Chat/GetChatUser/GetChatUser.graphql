@@ -5,5 +5,5 @@ type GetChatUserResponse {
 }
 
 type Query {
-  GetChatUser(id: Int!): GetChatUserResponse
+  GetChatUser(id: Int!): GetChatUserResponse!
 }

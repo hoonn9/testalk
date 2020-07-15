@@ -1,0 +1,9 @@
+type File {
+  id: Int!
+  user: User!
+  userId: Int!
+  url: String!
+  key: String!
+  createdAt: String!
+  updatedAt: String
+}

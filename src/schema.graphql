@@ -5,8 +5,8 @@ type GetChatMessagesResponse {
 }
 
 type Query {
-  GetChatMessages(chatId: Int!, requestTime: String): GetChatMessagesResponse
-  GetChatUser(id: Int!): GetChatUserResponse
+  GetChatMessages(chatId: Int!, requestTime: String): GetChatMessagesResponse!
+  GetChatUser(id: Int!): GetChatUserResponse!
   GetCustomToken(means: CustomTokenMeansOptions!, socialId: String!): GetCustomTokenResponse!
   GetMyChat: GetMyChatResponse!
   GetMyProfile: GetMyProfileResponse!
@@ -29,10 +29,12 @@ type LeaveChatResponse {
 type Mutation {
   LeaveChat(id: Int!): LeaveChatResponse!
   SendChatMessage(chatId: Int, receiveUserId: Int, text: String!): SendChatMessageResponse!
-  CompletePhoneVerification(phoneNumber: String!, key: String!, fbId: String, ggId: String, kkId: String): CompletePhoneVerificationResponse!
+  LoginCompletePhoneVerification(phoneNumber: String!, key: String!): LoginCompletePhoneVerificationResponse!
+  LoginStartPhoneVerification(phoneNumber: String!): LoginStartPhoneVerificationResponse
   ReportMovement(lastLat: Float, lastLng: Float): ReportMovementResponse!
   SetUserNotify(token: String!): SetUserNotifyResponse!
-  StartPhoneVerification(phoneNumber: String!): StartPhoneVerificationResponse
+  SignUpCompletePhoneVerification(phoneNumber: String!, key: String!, fbId: String, ggId: String, kkId: String, nickName: String!, gender: String!, birth: String!): SignUpCompletePhoneVerificationResponse!
+  SignUpStartPhoneVerification(phoneNumber: String!): SignUpStartPhoneVerificationResponse!
 }
 
 type Subscription {
@@ -48,7 +50,17 @@ type SendChatMessageResponse {
 type Chat {
   id: Int!
   users: [User!]!
-  messages: [Message!]
+  messages: [Message]
+  createdAt: String!
+  updatedAt: String
+}
+
+type File {
+  id: Int!
+  user: User!
+  userId: Int!
+  url: String!
+  key: String!
   createdAt: String!
   updatedAt: String
 }
@@ -61,14 +73,6 @@ type Message {
   chatId: Int
   createdAt: String!
   updatedAt: String
-}
-
-type CompletePhoneVerificationResponse {
-  ok: Boolean!
-  error: String
-  userId: Int
-  token: String
-  isNew: Boolean
 }
 
 type GetCustomTokenResponse {
@@ -105,6 +109,18 @@ type GetUserProfileResponse {
   user: User
 }
 
+type LoginCompletePhoneVerificationResponse {
+  ok: Boolean!
+  error: String
+  userId: Int
+  token: String
+}
+
+type LoginStartPhoneVerificationResponse {
+  ok: Boolean!
+  error: String
+}
+
 type ReportMovementResponse {
   ok: Boolean!
   error: String
@@ -121,7 +137,7 @@ type User {
   birth: String!
   gender: String!
   intro: String!
-  profilePhoto: [String]
+  profilePhoto: [File!]
   phoneNumber: String!
   verifiedPhoneNumber: Boolean!
   isOnline: Boolean!
@@ -132,11 +148,19 @@ type User {
   kkId: String
   notifyId: String
   chats: [Chat!]
+  files: [File!]
   createdAt: String!
   updatedAt: String
 }
 
-type StartPhoneVerificationResponse {
+type SignUpCompletePhoneVerificationResponse {
+  ok: Boolean!
+  error: String
+  userId: Int
+  token: String
+}
+
+type SignUpStartPhoneVerificationResponse {
   ok: Boolean!
   error: String
 }
