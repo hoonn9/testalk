@@ -30,12 +30,18 @@ const resolvers: Resolvers = {
                                 console.log("Message createdAt:", message.createdAt);
                                 for (let j = 0; j < chat.users.length; j++) {
                                     if (j !== i) {
-                                        sendFCM({
+                                        const profilePhoto = user.profilePhoto.length > 0 ? user.profilePhoto[0].url : "";
+                                        const userData = {
+                                            userId: message.userId.toString(),
                                             nickName: user.nickName,
+                                            birth: user.birth,
+                                            gender: user.gender,
+                                            profilePhoto,
+                                        }
+                                        sendFCM({
+                                            user: JSON.stringify(userData),
                                             chatId: chat.id.toString(),
                                             messageId: message.id.toString(),
-                                            userId: message.userId.toString(),
-                                            receiveUserId: receiveUserId?.toString() || "",
                                             content: message.text,
                                             createdAt: new Date(message.createdAt).getTime().toString()
                                         }, chat.users[j].notifyId).then((response) => {
@@ -77,13 +83,18 @@ const resolvers: Resolvers = {
                         pubSub.publish("newChatMessage", {
                             MessageSubscription: message
                         })
-
-                        sendFCM({
+                        const profilePhoto = user.profilePhoto.length > 0 ? user.profilePhoto[0].url : "";
+                        const userData = {
+                            userId: message.userId.toString(),
                             nickName: user.nickName,
+                            birth: user.birth,
+                            gender: user.gender,
+                            profilePhoto,
+                        }
+                        sendFCM({
+                            user: JSON.stringify(userData),
                             chatId: chat.id.toString(),
                             messageId: message.id.toString(),
-                            userId: message.userId.toString(),
-                            receiveUserId: receiveUserId?.toString() || "",
                             content: message.text,
                             createdAt: new Date(message.createdAt).getTime().toString()
                         }, receiveUser.notifyId).then((response) => {

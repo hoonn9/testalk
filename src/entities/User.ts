@@ -8,6 +8,7 @@ import {
     ManyToMany,
     JoinTable,
     OneToMany,
+    Index,
 } from "typeorm";
 import Chat from "./Chat";
 import File from "./File";
@@ -35,6 +36,7 @@ class User extends BaseEntity {
     // profilePhoto: File[];
 
     @Column({ type: "text" })
+    @Index({ unique: true })
     phoneNumber: string;
 
     @Column({ type: "boolean", default: false })

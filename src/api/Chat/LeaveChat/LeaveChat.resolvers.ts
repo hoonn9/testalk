@@ -3,10 +3,11 @@ import { LeaveChatMutationArgs, LeaveChatResponse } from "../../../types/graph";
 import privateResolver from "../../../utils/privateResolver";
 import User from "../../../entities/User";
 import Chat from "../../../entities/Chat";
+import Message from "../../../entities/Message";
 
 const resolvers: Resolvers = {
     Mutation: {
-        LeaveChat: privateResolver(async (_, args: LeaveChatMutationArgs, { req }): Promise<LeaveChatResponse> => {
+        LeaveChat: privateResolver(async (_, args: LeaveChatMutationArgs, { req, pubSub }): Promise<LeaveChatResponse> => {
             const user: User = req.user;
             const { id } = args
             try {
@@ -15,6 +16,10 @@ const resolvers: Resolvers = {
                     if (chat) {
                         for (let i = 0; i < chat.users.length; i++) {
                             if (user.id === chat.users[i].id) {
+                                const leaveMessage = await Message.create({ userId: user.id, chat, text: "", target: "LEAVE" }).save();
+                                pubSub.publish("newChatMessage", {
+                                    MessageSubscription: leaveMessage
+                                })
                                 chat.remove();
                                 return {
                                     ok: true,

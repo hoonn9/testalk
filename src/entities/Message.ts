@@ -9,6 +9,9 @@ import {
 } from "typeorm";
 import Chat from "./Chat";
 
+const CHAT = "CHAT";
+const LEAVE = "LEAVE"
+
 @Entity()
 class Message extends BaseEntity {
     @PrimaryGeneratedColumn() id: number;
@@ -24,6 +27,9 @@ class Message extends BaseEntity {
 
     @Column({ type: "text" })
     text: string;
+
+    @Column({ type: "text", enum: [CHAT, LEAVE], default: CHAT })
+    target: string;
 
     @CreateDateColumn() createdAt: string;
     @UpdateDateColumn() updatedAt: string;

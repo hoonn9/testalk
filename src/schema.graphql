@@ -71,6 +71,7 @@ type Message {
   userId: Int
   chat: Chat!
   chatId: Int
+  target: String!
   createdAt: String!
   updatedAt: String
 }
