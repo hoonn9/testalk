@@ -35,6 +35,7 @@ type Mutation {
   SetUserNotify(token: String!): SetUserNotifyResponse!
   SignUpCompletePhoneVerification(phoneNumber: String!, key: String!, fbId: String, ggId: String, kkId: String, nickName: String!, gender: String!, birth: String!): SignUpCompletePhoneVerificationResponse!
   SignUpStartPhoneVerification(phoneNumber: String!): SignUpStartPhoneVerificationResponse!
+  UpdateUserProfile(nickName: String!, intro: String!, profilePhoto: [String!]!): UpdateUserProfileResponse!
 }
 
 type Subscription {
@@ -162,6 +163,11 @@ type SignUpCompletePhoneVerificationResponse {
 }
 
 type SignUpStartPhoneVerificationResponse {
+  ok: Boolean!
+  error: String
+}
+
+type UpdateUserProfileResponse {
   ok: Boolean!
   error: String
 }

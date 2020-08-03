@@ -6,6 +6,7 @@ import schema from "./schema"
 import { NextFunction, Response } from "express";
 import decodeJWT from "./utils/decodeJWT";
 import firebase from "firebase-admin";
+import { uploadController } from "./upload";
 
 const firebaseAccount = require("../testalk-2b9dc-firebase-adminsdk-icfhw-1122c70469.json");
 
@@ -37,6 +38,7 @@ class App {
         this.app.express.use(logger("dev"));
         this.app.express.use(helmet());
         this.app.express.use(this.jwt);
+        this.app.express.post("/api/upload", uploadController);
     }
 
     private jwt = async (req, res: Response, next: NextFunction): Promise<void> => {

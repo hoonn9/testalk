@@ -6,7 +6,10 @@
   "author": "HXXNS <39939869+HXXNS@users.noreply.github.com>",
   "license": "MIT",
   "dependencies": {
+    "@types/multer": "^1.4.3",
+    "@types/multer-s3": "^2.7.7",
     "@types/twilio": "^2.11.0",
+    "aws-sdk": "^2.714.2",
     "axios": "^0.19.2",
     "cors": "^2.8.5",
     "date-fns": "^2.14.0",
@@ -17,6 +20,8 @@
     "helmet": "^3.22.1",
     "merge-graphql-schemas": "^1.7.8",
     "morgan": "^1.10.0",
+    "multer": "^1.4.2",
+    "multer-s3": "^2.9.0",
     "twilio": "^3.46.0",
     "typeorm": "^0.2.25"
   },
