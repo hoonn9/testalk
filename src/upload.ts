@@ -1,6 +1,12 @@
 import multer from "multer";
 import multerS3 from "multer-s3";
 import aws from "aws-sdk";
+import { ObjectIdentifier } from "aws-sdk/clients/s3";
+
+interface ResponseProp {
+    url: string;
+    key: string;
+}
 
 const s3 = new aws.S3({
     accessKeyId: process.env.S3_ACCESS_KEY,
@@ -33,10 +39,27 @@ export const uploadController = (req, res) => {
             return;
         }
         const { files } = req;
-        let locationArray: Array<any> = []
+        console.log(files);
+        let locationArray: Array<ResponseProp> = []
         for (let i = 0; i < files.length; i++) {
-            locationArray.push(files[i].location);
+            locationArray.push({ url: files[i].location, key: files[i].key });
         }
         res.json({ locationArray });
     })
+}
+
+export const deleteObject = (objects: Array<ObjectIdentifier>) => {
+    if (objects) {
+        s3.deleteObjects({
+            Bucket: "testalk",
+            Delete: {
+                Objects: objects
+            }
+        }, (error, data) => {
+            if (error) {
+                console.log(error)
+                return;
+            }
+        })
+    }
 }

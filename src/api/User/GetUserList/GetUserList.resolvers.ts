@@ -31,7 +31,9 @@ const resolvers: Resolvers = {
                     take,
                     order: {
                         updatedAt: "DESC"
-                    }
+                    },
+                    relations: ["profilePhoto"],
+
                 })
                 //console.log(users.find);
                 if (users) {

@@ -8,7 +8,6 @@ import {
     ManyToOne,
     AfterRemove
 } from "typeorm";
-import Chat from "./Chat";
 import User from "./User";
 
 @Entity()
@@ -20,9 +19,6 @@ class File extends BaseEntity {
 
     @Column({ type: "int" })
     userId: number;
-
-    @ManyToOne(type => Chat, chat => chat.messages, { onDelete: "CASCADE" })
-    chat: Chat;
 
     @Column({ type: "text" })
     url: string;

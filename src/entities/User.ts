@@ -35,7 +35,7 @@ class User extends BaseEntity {
     // @Column({ type: "text" })
     // profilePhoto: File[];
 
-    @Column({ type: "text" })
+    @Column({ type: "text", select: false })
     @Index({ unique: true })
     phoneNumber: string;
 
@@ -51,16 +51,16 @@ class User extends BaseEntity {
     @Column({ type: "double precision", default: 0 })
     lastLat: number;
 
-    @Column({ type: "text", nullable: true })
+    @Column({ type: "text", nullable: true, select: false })
     fbId: string;
 
-    @Column({ type: "text", nullable: true })
+    @Column({ type: "text", nullable: true, select: false })
     ggId: string;
 
-    @Column({ type: "text", nullable: true })
+    @Column({ type: "text", nullable: true, select: false })
     kkId: string;
 
-    @Column({ type: "text", nullable: true })
+    @Column({ type: "text", nullable: true, select: false })
     notifyId: string;
 
     @ManyToMany(type => Chat, chat => chat.users)

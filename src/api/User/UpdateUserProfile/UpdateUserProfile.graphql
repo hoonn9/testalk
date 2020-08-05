@@ -3,10 +3,21 @@ type UpdateUserProfileResponse {
   error: String
 }
 
+enum PhotoTarget {
+  upload
+  delete
+}
+
+input PhotoObject {
+  url: String!
+  key: String!
+  target: PhotoTarget!
+}
+
 type Mutation {
   UpdateUserProfile(
     nickName: String!
     intro: String!
-    profilePhoto: [String!]!
+    profilePhoto: [PhotoObject!]!
   ): UpdateUserProfileResponse!
 }
