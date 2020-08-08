@@ -8,10 +8,11 @@ import {
     ManyToMany,
     JoinTable,
     OneToMany,
-    Index,
+    Index
 } from "typeorm";
 import Chat from "./Chat";
 import File from "./File";
+import Like from "./Like";
 
 @Entity()
 class User extends BaseEntity {
@@ -60,7 +61,7 @@ class User extends BaseEntity {
     @Column({ type: "text", nullable: true, select: false })
     kkId: string;
 
-    @Column({ type: "text", nullable: true, select: false })
+    @Column({ type: "text", nullable: true })
     notifyId: string;
 
     @ManyToMany(type => Chat, chat => chat.users)
@@ -69,6 +70,12 @@ class User extends BaseEntity {
 
     @OneToMany(type => File, file => file.user)
     files: File[];
+
+    @OneToMany(type => Like, like => like.user)
+    likes: Like[];
+
+    @OneToMany(type => Like, like => like.likeUser)
+    doLikes: Like[];
 
     @CreateDateColumn() createdAt: string;
     @UpdateDateColumn() updatedAt: string;

@@ -9,7 +9,7 @@ const resolvers: Resolvers = {
             const { user } = req;
             try {
                 if (user) {
-                    const getUser = await User.findOne({ id: args.id });
+                    const getUser = await User.findOne({ id: args.id }, { relations: ["profilePhoto", "likes"] });
                     if (getUser) {
                         return {
                             ok: true,
@@ -23,14 +23,17 @@ const resolvers: Resolvers = {
                                 notifyId: null,
                                 chats: null,
                                 createdAt: null,
-                                updatedAt: null
-                            })
+                                updatedAt: null,
+                                likes: null
+                            }),
+                            likeCount: getUser.likes.length
                         }
                     } else {
                         return {
                             ok: false,
                             error: "Cannot find this user.",
-                            user: null
+                            user: null,
+                            likeCount: null
                         }
                     }
 
@@ -38,14 +41,16 @@ const resolvers: Resolvers = {
                     return {
                         ok: false,
                         error: "Unauthorized.",
-                        user: null
+                        user: null,
+                        likeCount: null
                     }
                 }
             } catch (error) {
                 return {
                     ok: false,
                     error: null,
-                    user: null
+                    user: null,
+                    likeCount: null
                 }
             }
         })

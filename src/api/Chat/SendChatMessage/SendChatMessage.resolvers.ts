@@ -13,7 +13,7 @@ const resolvers: Resolvers = {
             const user: User = req.user;
             try {
                 if (chatId) {
-                    const chat = await Chat.findOne({ id: chatId }, { relations: ["users"] })
+                    const chat = await Chat.findOne({ id: chatId }, { relations: ["users", "users.profilePhoto"] })
                     console.log(chat)
                     if (chat) {
                         for (let i = 0; i < chat.users.length; i++) {

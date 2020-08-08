@@ -11,7 +11,7 @@ const resolvers: Resolvers = {
             const { id } = args;
             try {
                 if (user) {
-                    const chat = await Chat.findOne({ id }, { relations: ["users"] });
+                    const chat = await Chat.findOne({ id }, { relations: ["users", "users.profilePhoto"] });
                     if (chat) {
                         let isInChat = false;
                         let other: User | null = null;

@@ -16,10 +16,8 @@ type User {
   notifyId: String
   chats: [Chat!]
   files: [File!]
+  likes: [Like!]
+  doLikes: [Like!]
   createdAt: String!
   updatedAt: String
-}
-
-type Query {
-  user: User
 }

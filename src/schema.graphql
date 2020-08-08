@@ -12,7 +12,6 @@ type Query {
   GetMyProfile: GetMyProfileResponse!
   GetUserList(requestTime: String!, means: String!, skip: Int!, take: Int!): GetUserListResponse!
   GetUserProfile(id: Int!): GetUserProfileResponse!
-  user: User
 }
 
 type GetChatUserResponse {
@@ -29,6 +28,7 @@ type LeaveChatResponse {
 type Mutation {
   LeaveChat(id: Int!): LeaveChatResponse!
   SendChatMessage(chatId: Int, receiveUserId: Int, text: String!): SendChatMessageResponse!
+  ToggleUserLike(id: Int!): ToggleUserLikeResponse!
   LoginCompletePhoneVerification(phoneNumber: String!, key: String!): LoginCompletePhoneVerificationResponse!
   LoginStartPhoneVerification(phoneNumber: String!): LoginStartPhoneVerificationResponse
   ReportMovement(lastLat: Float, lastLng: Float): ReportMovementResponse!
@@ -66,6 +66,21 @@ type File {
   updatedAt: String
 }
 
+type Like {
+  id: Int!
+  user: User!
+  userId: Int!
+  likeUser: User!
+  likeUserId: Int!
+  createdAt: String!
+  updatedAt: String
+}
+
+type ToggleUserLikeResponse {
+  ok: Boolean!
+  error: String
+}
+
 type Message {
   id: Int!
   text: String!
@@ -97,6 +112,7 @@ type GetMyProfileResponse {
   ok: Boolean!
   error: String
   user: User
+  likeCount: Int
 }
 
 type GetUserListResponse {
@@ -109,6 +125,7 @@ type GetUserProfileResponse {
   ok: Boolean!
   error: String
   user: User
+  likeCount: Int
 }
 
 type LoginCompletePhoneVerificationResponse {
@@ -151,6 +168,8 @@ type User {
   notifyId: String
   chats: [Chat!]
   files: [File!]
+  likes: [Like!]
+  doLikes: [Like!]
   createdAt: String!
   updatedAt: String
 }

@@ -30,11 +30,11 @@ const resolvers: Resolvers = {
                     skip,
                     take,
                     order: {
-                        updatedAt: "DESC"
+                        updatedAt: "DESC",
                     },
                     relations: ["profilePhoto"],
-
                 })
+
                 //console.log(users.find);
                 if (users) {
                     return {
