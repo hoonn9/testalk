@@ -13,6 +13,7 @@ import {
 import Chat from "./Chat";
 import File from "./File";
 import Like from "./Like";
+import Post from "./Post";
 
 @Entity()
 class User extends BaseEntity {
@@ -76,6 +77,12 @@ class User extends BaseEntity {
 
     @OneToMany(type => Like, like => like.likeUser)
     doLikes: Like[];
+
+    @OneToMany(type => Post, post => post.user)
+    posts: Post[];
+
+    @Column({ type: "int", default: 0 })
+    cash: number;
 
     @CreateDateColumn() createdAt: string;
     @UpdateDateColumn() updatedAt: string;

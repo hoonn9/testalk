@@ -18,6 +18,8 @@ type User {
   files: [File!]
   likes: [Like!]
   doLikes: [Like!]
+  cash: Int!
+  posts: [Post!]
   createdAt: String!
   updatedAt: String
 }

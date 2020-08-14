@@ -1,0 +1,23 @@
+type UploadPostResponse {
+  ok: Boolean!
+  error: String
+}
+
+enum PhotoTarget {
+  upload
+  delete
+}
+
+input PhotoObject {
+  url: String!
+  key: String!
+  target: PhotoTarget!
+}
+
+type Mutation {
+  UploadPost(
+    title: String!
+    content: String!
+    postPhotos: [PhotoObject!]
+  ): UploadPostResponse
+}

@@ -9,6 +9,7 @@ import {
     AfterRemove
 } from "typeorm";
 import User from "./User";
+import Post from "./Post";
 
 @Entity()
 class File extends BaseEntity {
@@ -19,6 +20,12 @@ class File extends BaseEntity {
 
     @Column({ type: "int" })
     userId: number;
+
+    @ManyToOne(type => Post, post => post.files, { onDelete: "CASCADE" })
+    post: Post;
+
+    @Column({ type: "int", nullable: true })
+    postId: number;
 
     @Column({ type: "text" })
     url: string;

@@ -1,0 +1,14 @@
+type GetPostListResponse {
+  ok: Boolean!
+  error: String
+  posts: [Post]
+}
+
+type Query {
+  GetPostList(
+    requestTime: String!
+    means: String!
+    skip: Int!
+    take: Int!
+  ): GetPostListResponse!
+}

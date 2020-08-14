@@ -2,38 +2,66 @@ import { GetUserProfileQueryArgs, GetUserProfileResponse } from "../../../types/
 import { Resolvers } from "../../../types/resolvers";
 import privateResolver from "../../../utils/privateResolver";
 import User from "../../../entities/User";
+import Like from "../../../entities/Like";
 
 const resolvers: Resolvers = {
     Query: {
         GetUserProfile: privateResolver(async (_, args: GetUserProfileQueryArgs, { req }): Promise<GetUserProfileResponse> => {
-            const { user } = req;
+            const user: User = req.user;
+            const { id } = args
             try {
                 if (user) {
-                    const getUser = await User.findOne({ id: args.id }, { relations: ["profilePhoto", "likes"] });
+                    const getUser = await User.findOne({ id: id }, { relations: ["profilePhoto", "likes"] });
                     if (getUser) {
-                        return {
-                            ok: true,
-                            error: null,
-                            user: Object.assign({}, getUser, {
-                                phoneNumber: "",
-                                verifiedPhoneNumber: "",
-                                fbId: null,
-                                ggId: null,
-                                kkId: null,
-                                notifyId: null,
-                                chats: null,
-                                createdAt: null,
-                                updatedAt: null,
-                                likes: null
-                            }),
-                            likeCount: getUser.likes.length
+
+                        const isLike = await Like.findOne({ likeUserId: user.id, userId: id });
+                        if (isLike) {
+                            return {
+                                ok: true,
+                                error: null,
+                                user: Object.assign({}, getUser, {
+                                    phoneNumber: "",
+                                    verifiedPhoneNumber: "",
+                                    fbId: null,
+                                    ggId: null,
+                                    kkId: null,
+                                    notifyId: null,
+                                    chats: null,
+                                    createdAt: null,
+                                    updatedAt: null,
+                                    likes: null
+                                }),
+                                likeCount: getUser.likes.length,
+                                isLiked: true
+                            }
+                        } else {
+                            return {
+                                ok: true,
+                                error: null,
+                                user: Object.assign({}, getUser, {
+                                    phoneNumber: "",
+                                    verifiedPhoneNumber: "",
+                                    fbId: null,
+                                    ggId: null,
+                                    kkId: null,
+                                    notifyId: null,
+                                    chats: null,
+                                    createdAt: null,
+                                    updatedAt: null,
+                                    likes: null
+                                }),
+                                likeCount: getUser.likes.length,
+                                isLiked: false
+                            }
                         }
+
                     } else {
                         return {
                             ok: false,
                             error: "Cannot find this user.",
                             user: null,
-                            likeCount: null
+                            likeCount: null,
+                            isLiked: null
                         }
                     }
 
@@ -42,7 +70,8 @@ const resolvers: Resolvers = {
                         ok: false,
                         error: "Unauthorized.",
                         user: null,
-                        likeCount: null
+                        likeCount: null,
+                        isLiked: null
                     }
                 }
             } catch (error) {
@@ -50,7 +79,8 @@ const resolvers: Resolvers = {
                     ok: false,
                     error: null,
                     user: null,
-                    likeCount: null
+                    likeCount: null,
+                    isLiked: null
                 }
             }
         })
