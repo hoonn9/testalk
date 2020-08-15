@@ -7,6 +7,7 @@ type GetChatMessagesResponse {
 type Query {
   GetChatMessages(chatId: Int!, requestTime: String): GetChatMessagesResponse!
   GetChatUser(id: Int!): GetChatUserResponse!
+  GetPost(id: Int!): GetPostResponse!
   GetPostList(requestTime: String!, means: String!, skip: Int!, take: Int!): GetPostListResponse!
   GetCustomToken(means: CustomTokenMeansOptions!, socialId: String!): GetCustomTokenResponse!
   GetMyChat: GetMyChatResponse!
@@ -29,6 +30,7 @@ type LeaveChatResponse {
 type Mutation {
   LeaveChat(id: Int!): LeaveChatResponse!
   SendChatMessage(chatId: Int, receiveUserId: Int, text: String!): SendChatMessageResponse!
+  AddComment(postId: Int!, parentId: Int, content: String!): AddCommentResponse!
   ToggleUserLike(id: Int!): ToggleUserLikeResponse!
   UploadPost(title: String!, content: String!, postPhotos: [PhotoObject!]): UploadPostResponse
   LoginCompletePhoneVerification(phoneNumber: String!, key: String!): LoginCompletePhoneVerificationResponse!
@@ -54,6 +56,24 @@ type Chat {
   id: Int!
   users: [User!]!
   messages: [Message]
+  createdAt: String!
+  updatedAt: String
+}
+
+type AddCommentResponse {
+  ok: Boolean!
+  error: String
+}
+
+type Comment {
+  id: Int!
+  parentId: Int
+  content: String!
+  user: User!
+  userId: Int!
+  post: Post!
+  postId: Int!
+  depth: Int!
   createdAt: String!
   updatedAt: String
 }
@@ -96,6 +116,12 @@ type Message {
   updatedAt: String
 }
 
+type GetPostResponse {
+  ok: Boolean!
+  error: String
+  post: Post
+}
+
 type GetPostListResponse {
   ok: Boolean!
   error: String
@@ -109,6 +135,7 @@ type Post {
   userId: Int!
   user: User!
   files: [File!]
+  comments: [Comment!]
   createdAt: String!
   updatedAt: String
 }
@@ -215,6 +242,7 @@ type User {
   doLikes: [Like!]
   cash: Int!
   posts: [Post!]
+  comments: [Comment!]
   createdAt: String!
   updatedAt: String
 }

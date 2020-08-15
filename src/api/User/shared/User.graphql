@@ -20,6 +20,7 @@ type User {
   doLikes: [Like!]
   cash: Int!
   posts: [Post!]
+  comments: [Comment!]
   createdAt: String!
   updatedAt: String
 }

@@ -6,36 +6,37 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
     ManyToOne,
-    OneToMany,
 } from "typeorm";
 import User from "./User";
-import File from "./File";
-import Comment from "./Comment";
+import Post from "./Post";
 
 @Entity()
-class Post extends BaseEntity {
+class Comment extends BaseEntity {
     @PrimaryGeneratedColumn() id: number;
 
-    @Column({ type: "text" })
-    title: string;
+    @Column({ type: "int", nullable: true })
+    parentId: number;
 
     @Column({ type: "text" })
     content: string;
 
-    @ManyToOne(type => User, user => user.posts)
+    @ManyToOne(type => User, user => user.comments)
     user: User;
 
     @Column({ type: "int" })
-    userId: number
+    userId: number;
 
-    @OneToMany(type => File, file => file.post)
-    files: File[];
+    @ManyToOne(type => Post, post => post.comments)
+    post: Post;
 
-    @OneToMany(type => Comment, comment => comment.post)
-    comments: Comment[];
+    @Column({ type: "int" })
+    postId: number;
+
+    @Column({ type: "int" })
+    depth: number;
 
     @CreateDateColumn() createdAt: string;
     @UpdateDateColumn() updatedAt: string;
 }
 
-export default Post;
+export default Comment;

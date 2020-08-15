@@ -14,6 +14,7 @@ import Chat from "./Chat";
 import File from "./File";
 import Like from "./Like";
 import Post from "./Post";
+import Comment from "./Comment";
 
 @Entity()
 class User extends BaseEntity {
@@ -80,6 +81,9 @@ class User extends BaseEntity {
 
     @OneToMany(type => Post, post => post.user)
     posts: Post[];
+
+    @OneToMany(type => Comment, comment => comment.user)
+    comments: Comment[];
 
     @Column({ type: "int", default: 0 })
     cash: number;

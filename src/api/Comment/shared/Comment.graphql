@@ -1,0 +1,12 @@
+type Comment {
+  id: Int!
+  parentId: Int
+  content: String!
+  user: User!
+  userId: Int!
+  post: Post!
+  postId: Int!
+  depth: Int!
+  createdAt: String!
+  updatedAt: String
+}

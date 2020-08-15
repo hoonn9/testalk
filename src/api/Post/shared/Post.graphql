@@ -5,6 +5,7 @@ type Post {
   userId: Int!
   user: User!
   files: [File!]
+  comments: [Comment!]
   createdAt: String!
   updatedAt: String
 }
