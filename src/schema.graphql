@@ -7,6 +7,7 @@ type GetChatMessagesResponse {
 type Query {
   GetChatMessages(chatId: Int!, requestTime: String): GetChatMessagesResponse!
   GetChatUser(id: Int!): GetChatUserResponse!
+  GetCommentList(id: Int!, skip: Int!, take: Int!): GetCommentListResponse!
   GetPost(id: Int!): GetPostResponse!
   GetPostList(requestTime: String!, means: String!, skip: Int!, take: Int!): GetPostListResponse!
   GetCustomToken(means: CustomTokenMeansOptions!, socialId: String!): GetCustomTokenResponse!
@@ -65,6 +66,12 @@ type AddCommentResponse {
   error: String
 }
 
+type GetCommentListResponse {
+  ok: Boolean!
+  error: String
+  comments: [Comment]
+}
+
 type Comment {
   id: Int!
   parentId: Int
@@ -74,6 +81,7 @@ type Comment {
   post: Post!
   postId: Int!
   depth: Int!
+  seq: Int!
   createdAt: String!
   updatedAt: String
 }

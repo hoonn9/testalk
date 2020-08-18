@@ -7,6 +7,7 @@ type Comment {
   post: Post!
   postId: Int!
   depth: Int!
+  seq: Int!
   createdAt: String!
   updatedAt: String
 }

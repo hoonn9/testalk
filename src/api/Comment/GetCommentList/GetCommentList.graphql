@@ -1,0 +1,9 @@
+type GetCommentListResponse {
+  ok: Boolean!
+  error: String
+  comments: [Comment]
+}
+
+type Query {
+  GetCommentList(id: Int!, skip: Int!, take: Int!): GetCommentListResponse!
+}

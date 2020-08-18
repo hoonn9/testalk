@@ -6,6 +6,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
     ManyToOne,
+    AfterInsert,
 } from "typeorm";
 import User from "./User";
 import Post from "./Post";
@@ -34,6 +35,18 @@ class Comment extends BaseEntity {
 
     @Column({ type: "int" })
     depth: number;
+
+    @Column({ type: "int" })
+    seq: number;
+
+    @AfterInsert()
+    async initParentId(): Promise<void> {
+        if (!this.parentId) {
+            this.parentId = this.id;
+            this.save();
+        }
+
+    }
 
     @CreateDateColumn() createdAt: string;
     @UpdateDateColumn() updatedAt: string;

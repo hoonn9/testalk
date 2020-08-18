@@ -14,14 +14,28 @@ const resolvers: Resolvers = {
             if (user) {
                 try {
                     const post = await Post.findOne({ id: postId })
-                    if (parentId) {
-                        await Comment.create({ post: post, parentId: parentId, user: user, content: content, depth: 1 }).save();
+                    if (post) {
+                        if (parentId) {
+                            const comments = await Comment.find({ postId: postId, parentId: parentId });
+                            if (comments) {
+                                await Comment.create({ post: post, parentId: parentId, user: user, content: content, depth: 1, seq: comments.length + 2 }).save();
+                            } else {
+                                await Comment.create({ post: post, parentId: parentId, user: user, content: content, depth: 1, seq: 2 }).save();
+
+                            }
+                        } else {
+                            const comment = await Comment.create({ post: post, user: user, content: content, depth: 0, seq: 1 });
+                            comment.save();
+                        }
+                        return {
+                            ok: true,
+                            error: null
+                        }
                     } else {
-                        await Comment.create({ post: post, user: user, content: content, depth: 0 }).save();
-                    }
-                    return {
-                        ok: true,
-                        error: null
+                        return {
+                            ok: false,
+                            error: null
+                        }
                     }
                 } catch (error) {
                     return {
