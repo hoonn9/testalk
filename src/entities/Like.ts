@@ -8,6 +8,7 @@ import {
     ManyToOne,
 } from "typeorm";
 import User from "./User";
+import Post from "./Post";
 
 @Entity()
 class Like extends BaseEntity {
@@ -16,8 +17,14 @@ class Like extends BaseEntity {
     @ManyToOne(type => User, user => user.likes, { onDelete: "CASCADE" })
     user: User;
 
-    @Column({ type: "int" })
+    @Column({ type: "int", nullable: true })
     userId: number;
+
+    @ManyToOne(type => Post, post => post.likes, { onDelete: "CASCADE" })
+    post: Post;
+
+    @Column({ type: "int", nullable: true })
+    postId: number;
 
     @ManyToOne(type => User, user => user.doLikes, { onDelete: "CASCADE" })
     likeUser: User;

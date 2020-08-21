@@ -9,8 +9,8 @@ const resolvers: Resolvers = {
     Query: {
         GetCommentList: privateResolver(async (_, args: GetCommentListQueryArgs, { req }): Promise<GetCommentListResponse> => {
             const user: User = req.user;
-            const { id, skip, take } = args;
-
+            const { id, skip, take, sort } = args;
+            console.log(sort);
             if (!user) {
                 return {
                     ok: false,
@@ -33,20 +33,37 @@ const resolvers: Resolvers = {
                 //     });
 
                 //const comments = await getManager().query(`SELECT "Comment"."id" FROM comment Comment WHERE "Comment"."postId" = ${id}`);
+                if (sort === "ASC") {
+                    const comments = await Comment.find({ where: { postId: id }, order: { parentId: "ASC", seq: "ASC" }, relations: ["user"], skip: skip, take: take })
 
-                const comments = await Comment.find({ where: { postId: id }, order: { parentId: "ASC", seq: "ASC" }, relations: ["user"], skip: skip, take: take })
-
-                if (comments) {
-                    return {
-                        ok: true,
-                        error: null,
-                        comments
+                    if (comments) {
+                        return {
+                            ok: true,
+                            error: null,
+                            comments
+                        }
+                    } else {
+                        return {
+                            ok: false,
+                            error: "Can not get comment list",
+                            comments: null
+                        }
                     }
                 } else {
-                    return {
-                        ok: false,
-                        error: "Can not get comment list",
-                        comments: null
+                    const comments = await Comment.find({ where: { postId: id }, order: { parentId: "DESC", seq: "ASC" }, relations: ["user"], skip: skip, take: take })
+
+                    if (comments) {
+                        return {
+                            ok: true,
+                            error: null,
+                            comments
+                        }
+                    } else {
+                        return {
+                            ok: false,
+                            error: "Can not get comment list",
+                            comments: null
+                        }
                     }
                 }
 

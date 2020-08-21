@@ -18,7 +18,7 @@ class File extends BaseEntity {
     @ManyToOne(type => User, user => user.files, { onDelete: "CASCADE" })
     user: User;
 
-    @Column({ type: "int" })
+    @Column({ type: "int", nullable: true })
     userId: number;
 
     @ManyToOne(type => Post, post => post.files, { onDelete: "CASCADE" })

@@ -7,7 +7,7 @@ type GetChatMessagesResponse {
 type Query {
   GetChatMessages(chatId: Int!, requestTime: String): GetChatMessagesResponse!
   GetChatUser(id: Int!): GetChatUserResponse!
-  GetCommentList(id: Int!, skip: Int!, take: Int!): GetCommentListResponse!
+  GetCommentList(id: Int!, skip: Int!, take: Int!, sort: SortTarget!): GetCommentListResponse!
   GetPost(id: Int!): GetPostResponse!
   GetPostList(requestTime: String!, means: String!, skip: Int!, take: Int!): GetPostListResponse!
   GetCustomToken(means: CustomTokenMeansOptions!, socialId: String!): GetCustomTokenResponse!
@@ -32,6 +32,7 @@ type Mutation {
   LeaveChat(id: Int!): LeaveChatResponse!
   SendChatMessage(chatId: Int, receiveUserId: Int, text: String!): SendChatMessageResponse!
   AddComment(postId: Int!, parentId: Int, content: String!): AddCommentResponse!
+  TogglePostLike(id: Int!): TogglePostLikeResponse!
   ToggleUserLike(id: Int!): ToggleUserLikeResponse!
   UploadPost(title: String!, content: String!, postPhotos: [PhotoObject!]): UploadPostResponse
   LoginCompletePhoneVerification(phoneNumber: String!, key: String!): LoginCompletePhoneVerificationResponse!
@@ -72,6 +73,11 @@ type GetCommentListResponse {
   comments: [Comment]
 }
 
+enum SortTarget {
+  ASC
+  DESC
+}
+
 type Comment {
   id: Int!
   parentId: Int
@@ -102,10 +108,17 @@ type Like {
   id: Int!
   user: User!
   userId: Int!
+  post: Post!
+  postId: Int!
   likeUser: User!
   likeUserId: Int!
   createdAt: String!
   updatedAt: String
+}
+
+type TogglePostLikeResponse {
+  ok: Boolean!
+  error: String
 }
 
 type ToggleUserLikeResponse {
@@ -128,6 +141,7 @@ type GetPostResponse {
   ok: Boolean!
   error: String
   post: Post
+  isLiked: Boolean
 }
 
 type GetPostListResponse {
@@ -144,6 +158,10 @@ type Post {
   user: User!
   files: [File!]
   comments: [Comment!]
+  likes: [Like!]
+  readCount: Int!
+  likeCount: Int!
+  commentCount: Int!
   createdAt: String!
   updatedAt: String
 }

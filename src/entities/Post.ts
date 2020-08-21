@@ -11,6 +11,7 @@ import {
 import User from "./User";
 import File from "./File";
 import Comment from "./Comment";
+import Like from "./Like";
 
 @Entity()
 class Post extends BaseEntity {
@@ -33,6 +34,18 @@ class Post extends BaseEntity {
 
     @OneToMany(type => Comment, comment => comment.post)
     comments: Comment[];
+
+    @OneToMany(type => Like, like => like.post)
+    likes: Like[];
+
+    @Column({ type: "int", default: 0 })
+    readCount: number
+
+    @Column({ type: "int", default: 0 })
+    likeCount: number
+
+    @Column({ type: "int", default: 0 })
+    commentCount: number
 
     @CreateDateColumn() createdAt: string;
     @UpdateDateColumn() updatedAt: string;

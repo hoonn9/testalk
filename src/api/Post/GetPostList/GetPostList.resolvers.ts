@@ -29,7 +29,7 @@ const resolvers: Resolvers = {
                     order: {
                         updatedAt: "DESC",
                     },
-                    relations: ["files", "user"],
+                    relations: ["files", "user", "user.profilePhoto"],
                 })
                 if (posts) {
                     return {

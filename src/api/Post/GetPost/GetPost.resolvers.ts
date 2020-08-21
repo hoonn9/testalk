@@ -3,6 +3,7 @@ import { Resolvers } from "../../../types/resolvers";
 import privateResolver from "../../../utils/privateResolver";
 import User from "../../../entities/User";
 import Post from "../../../entities/Post";
+import Like from "../../../entities/Like";
 
 const resolvers: Resolvers = {
     Query: {
@@ -14,23 +15,39 @@ const resolvers: Resolvers = {
                 return {
                     ok: false,
                     error: "You have no authority.",
-                    post: null
+                    post: null,
+                    isLiked: null
                 }
             }
 
             try {
-                const post = await Post.findOne({ id: id }, { relations: ["user", "comments", "comments.user"] })
+                const post = await Post.findOne({ id: id }, { relations: ["user", "user.profilePhoto", "files"] })
                 if (post) {
-                    return {
-                        ok: true,
-                        error: null,
-                        post
+                    const isLike = await Like.findOne({ likeUserId: user.id, postId: id });
+                    post.readCount += 1;
+                    post.save();
+                    if (isLike) {
+                        return {
+                            ok: true,
+                            error: null,
+                            post,
+                            isLiked: true
+                        }
+                    } else {
+                        return {
+                            ok: true,
+                            error: null,
+                            post,
+                            isLiked: false
+                        }
                     }
+
                 } else {
                     return {
                         ok: false,
                         error: "Can not get post",
-                        post: null
+                        post: null,
+                        isLiked: null
                     }
                 }
 
@@ -38,7 +55,8 @@ const resolvers: Resolvers = {
                 return {
                     ok: false,
                     error: "Can not get post",
-                    post: null
+                    post: null,
+                    isLiked: null
                 }
             }
         })

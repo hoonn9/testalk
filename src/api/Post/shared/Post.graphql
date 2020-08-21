@@ -6,6 +6,10 @@ type Post {
   user: User!
   files: [File!]
   comments: [Comment!]
+  likes: [Like!]
+  readCount: Int!
+  likeCount: Int!
+  commentCount: Int!
   createdAt: String!
   updatedAt: String
 }

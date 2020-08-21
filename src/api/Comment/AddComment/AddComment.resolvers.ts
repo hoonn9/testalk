@@ -27,6 +27,8 @@ const resolvers: Resolvers = {
                             const comment = await Comment.create({ post: post, user: user, content: content, depth: 0, seq: 1 });
                             comment.save();
                         }
+                        post.commentCount += 1;
+                        post.save();
                         return {
                             ok: true,
                             error: null

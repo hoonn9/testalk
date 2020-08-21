@@ -3,7 +3,16 @@ type GetCommentListResponse {
   error: String
   comments: [Comment]
 }
+enum SortTarget {
+  ASC
+  DESC
+}
 
 type Query {
-  GetCommentList(id: Int!, skip: Int!, take: Int!): GetCommentListResponse!
+  GetCommentList(
+    id: Int!
+    skip: Int!
+    take: Int!
+    sort: SortTarget!
+  ): GetCommentListResponse!
 }

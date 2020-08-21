@@ -2,6 +2,7 @@ type GetPostResponse {
   ok: Boolean!
   error: String
   post: Post
+  isLiked: Boolean
 }
 
 type Query {

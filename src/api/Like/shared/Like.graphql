@@ -2,6 +2,8 @@ type Like {
   id: Int!
   user: User!
   userId: Int!
+  post: Post!
+  postId: Int!
   likeUser: User!
   likeUserId: Int!
   createdAt: String!
