@@ -2,12 +2,20 @@ type GetUserListResponse {
   ok: Boolean!
   error: String
   users: [User]
+  order: [Int]
+}
+
+enum GetUserListMeans {
+  login
+  distance
+  hot
+  join
 }
 
 type Query {
   GetUserList(
     requestTime: String!
-    means: String!
+    means: GetUserListMeans!
     skip: Int!
     take: Int!
   ): GetUserListResponse!

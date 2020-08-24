@@ -8,12 +8,14 @@ type Query {
   GetChatMessages(chatId: Int!, requestTime: String): GetChatMessagesResponse!
   GetChatUser(id: Int!): GetChatUserResponse!
   GetCommentList(id: Int!, skip: Int!, take: Int!, sort: SortTarget!): GetCommentListResponse!
+  GetILikeUserList(skip: Int!, take: Int!): GetILikeUserListResponse!
+  GetLikeMeUserList(requestTime: String!, skip: Int!, take: Int!): GetLikeMeUserListResponse!
   GetPost(id: Int!): GetPostResponse!
   GetPostList(requestTime: String!, means: String!, skip: Int!, take: Int!): GetPostListResponse!
   GetCustomToken(means: CustomTokenMeansOptions!, socialId: String!): GetCustomTokenResponse!
   GetMyChat: GetMyChatResponse!
   GetMyProfile: GetMyProfileResponse!
-  GetUserList(requestTime: String!, means: String!, skip: Int!, take: Int!): GetUserListResponse!
+  GetUserList(requestTime: String!, means: GetUserListMeans!, skip: Int!, take: Int!): GetUserListResponse!
   GetUserProfile(id: Int!): GetUserProfileResponse!
 }
 
@@ -102,6 +104,18 @@ type File {
   key: String!
   createdAt: String!
   updatedAt: String
+}
+
+type GetILikeUserListResponse {
+  ok: Boolean!
+  error: String
+  likes: [Like]
+}
+
+type GetLikeMeUserListResponse {
+  ok: Boolean!
+  error: String
+  likes: [Like]
 }
 
 type Like {
@@ -214,6 +228,14 @@ type GetUserListResponse {
   ok: Boolean!
   error: String
   users: [User]
+  order: [Int]
+}
+
+enum GetUserListMeans {
+  login
+  distance
+  hot
+  join
 }
 
 type GetUserProfileResponse {

@@ -1,0 +1,13 @@
+type GetLikeMeUserListResponse {
+  ok: Boolean!
+  error: String
+  likes: [Like]
+}
+
+type Query {
+  GetLikeMeUserList(
+    requestTime: String!
+    skip: Int!
+    take: Int!
+  ): GetLikeMeUserListResponse!
+}

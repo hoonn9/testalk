@@ -1,0 +1,9 @@
+type GetILikeUserListResponse {
+  ok: Boolean!
+  error: String
+  likes: [Like]
+}
+
+type Query {
+  GetILikeUserList(skip: Int!, take: Int!): GetILikeUserListResponse!
+}
