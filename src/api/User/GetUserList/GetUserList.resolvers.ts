@@ -9,6 +9,14 @@ interface DistanceQueryProp {
     User__id: number
 }
 
+interface HotQueryProp {
+    id: number
+    count: string
+}
+
+// 인기 유저 날짜 계산을 위한 수
+const hotUserCalDay = 7
+
 //const MoreThanDate = (timestamp: string) => MoreThan(format(new Date(parseInt(timestamp)), 'yyyy-MM-dd HH:mm:ss.SSSSSS'))
 const LessThanDate = (timestamp: string) => LessThan(format(new Date(parseInt(timestamp)), 'yyyy-MM-dd HH:mm:ss.SSSSSS'))
 const resolvers: Resolvers = {
@@ -74,10 +82,52 @@ const resolvers: Resolvers = {
                         }
                     }
                 } else if (means === "hot") {
+                    const hotUserIds: HotQueryProp[] = await getManager().query(`
+                    SELECT "User".id, count("Chat"."userId") as count FROM "user" "User" 
+                    LEFT JOIN ( SELECT "userId", "createdAt" FROM "user_chat" 
+                    WHERE "createdAt" BETWEEN now()::timestamp - ('${hotUserCalDay} day'::interval) AND now()::timestamp) "Chat" 
+                    ON "User".id = "Chat"."userId" GROUP BY "User".id ORDER BY count DESC LIMIT ${take} OFFSET ${skip};
+                    `)
+
+                    const userIdArray: number[] = []
+
+                    for (let i = 0; i < hotUserIds.length; i++) {
+                        userIdArray.push(hotUserIds[i].id);
+
+                    }
+                    if (hotUserIds && hotUserIds.length > 0) {
+
+                        users = await getRepository(User).find({
+                            where: { id: In(userIdArray) },
+                            relations: ["profilePhoto"],
+                        })
+
+                        return {
+                            ok: true,
+                            error: null,
+                            users,
+                            order: userIdArray
+                        }
+                    } else {
+                        return {
+                            ok: true,
+                            error: null,
+                            users,
+                            order: null
+                        }
+                    }
 
                 } else if (means === "join") {
-
+                    users = await getRepository(User).find({
+                        skip,
+                        take,
+                        order: {
+                            createdAt: "DESC",
+                        },
+                        relations: ["profilePhoto"],
+                    })
                 }
+
                 if (users) {
                     return {
                         ok: true,

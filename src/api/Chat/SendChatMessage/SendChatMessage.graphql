@@ -1,7 +1,7 @@
 type SendChatMessageResponse {
   ok: Boolean!
   error: String
-  message: Message
+  chatId: Int
 }
 
 type Mutation {
@@ -9,5 +9,6 @@ type Mutation {
     chatId: Int
     receiveUserId: Int
     text: String!
+    sendTime: String!
   ): SendChatMessageResponse!
 }

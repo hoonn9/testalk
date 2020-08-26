@@ -11,15 +11,15 @@ const resolvers: Resolvers = {
             const { id } = args;
             try {
                 if (user) {
-                    const chat = await Chat.findOne({ id }, { relations: ["users", "users.profilePhoto"] });
+                    const chat = await Chat.findOne({ id }, { relations: ["users", "users.user", "users.user.profilePhoto"] });
                     if (chat) {
                         let isInChat = false;
                         let other: User | null = null;
                         for (let i = 0; i < chat.users.length; i++) {
-                            if (user.id === chat.users[i].id) {
+                            if (user.id === chat.users[i].userId) {
                                 isInChat = true;
                             } else {
-                                other = chat.users[i]
+                                other = chat.users[i].user
                             }
                         }
                         if (isInChat) {

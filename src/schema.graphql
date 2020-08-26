@@ -32,7 +32,7 @@ type LeaveChatResponse {
 
 type Mutation {
   LeaveChat(id: Int!): LeaveChatResponse!
-  SendChatMessage(chatId: Int, receiveUserId: Int, text: String!): SendChatMessageResponse!
+  SendChatMessage(chatId: Int, receiveUserId: Int, text: String!, sendTime: String!): SendChatMessageResponse!
   AddComment(postId: Int!, parentId: Int, content: String!): AddCommentResponse!
   TogglePostLike(id: Int!): TogglePostLikeResponse!
   ToggleUserLike(id: Int!): ToggleUserLikeResponse!
@@ -46,19 +46,32 @@ type Mutation {
   UpdateUserProfile(nickName: String!, intro: String!, profilePhoto: [PhotoObject!]!): UpdateUserProfileResponse!
 }
 
+type MessageSubscribeResponse {
+  userId: Int!
+  chatId: Int!
+  text: String!
+  target: MessageTarget!
+  createdAt: String!
+}
+
+enum MessageTarget {
+  CHAT
+  LEAVE
+}
+
 type Subscription {
-  MessageSubscription: Message
+  MessageSubscription: MessageSubscribeResponse
 }
 
 type SendChatMessageResponse {
   ok: Boolean!
   error: String
-  message: Message
+  chatId: Int
 }
 
 type Chat {
   id: Int!
-  users: [User!]!
+  users: [UserChat!]!
   messages: [Message]
   createdAt: String!
   updatedAt: String
@@ -284,7 +297,7 @@ type User {
   ggId: String
   kkId: String
   notifyId: String
-  chats: [Chat!]
+  chats: [UserChat!]
   files: [File!]
   likes: [Like!]
   doLikes: [Like!]
@@ -310,6 +323,15 @@ type SignUpStartPhoneVerificationResponse {
 type UpdateUserProfileResponse {
   ok: Boolean!
   error: String
+}
+
+type UserChat {
+  user: User!
+  userId: Int!
+  chat: Chat!
+  chatId: Int!
+  createdAt: String!
+  updatedAt: String
 }
 
 type Verification {

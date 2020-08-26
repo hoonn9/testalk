@@ -14,7 +14,7 @@ type User {
   ggId: String
   kkId: String
   notifyId: String
-  chats: [Chat!]
+  chats: [UserChat!]
   files: [File!]
   likes: [Like!]
   doLikes: [Like!]

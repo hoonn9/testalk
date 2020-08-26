@@ -1,3 +1,16 @@
+type MessageSubscribeResponse {
+  userId: Int!
+  chatId: Int!
+  text: String!
+  target: MessageTarget!
+  createdAt: String!
+}
+
+enum MessageTarget {
+  CHAT
+  LEAVE
+}
+
 type Subscription {
-  MessageSubscription: Message
+  MessageSubscription: MessageSubscribeResponse
 }

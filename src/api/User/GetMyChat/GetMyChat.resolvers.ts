@@ -2,6 +2,7 @@ import { GetMyChatResponse } from "../../../types/graph"
 import { Resolvers } from "../../../types/resolvers";
 import privateResolver from "../../../utils/privateResolver";
 import User from "../../../entities/User";
+import Chat from "../../../entities/Chat";
 
 const resolvers: Resolvers = {
     Query: {
@@ -9,13 +10,21 @@ const resolvers: Resolvers = {
             const { user } = req;
             try {
                 if (user) {
-                    const my = await User.findOne({ id: user.id }, { relations: ["chats"] });
+                    const my = await User.findOne({ id: user.id }, { relations: ["chats", "chats.chat"] });
+
                     if (my) {
+                        const chats: Chat[] = []
+                        const len = my.chats.length
+                        for (let i = 0; i < len; i++) {
+                            chats.push(my.chats[i].chat)
+                        }
+
                         return {
                             ok: true,
                             error: null,
-                            chat: my.chats
+                            chat: chats
                         }
+
                     } else {
                         return {
                             ok: false,

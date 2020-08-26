@@ -5,12 +5,10 @@ import {
     Entity,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
-    ManyToMany,
-    JoinTable,
     OneToMany,
-    Index
+    Index,
 } from "typeorm";
-import Chat from "./Chat";
+import UserChat from "./UserChat";
 import File from "./File";
 import Like from "./Like";
 import Post from "./Post";
@@ -66,9 +64,8 @@ class User extends BaseEntity {
     @Column({ type: "text", nullable: true })
     notifyId: string;
 
-    @ManyToMany(type => Chat, chat => chat.users)
-    @JoinTable()
-    chats: Chat[];
+    @OneToMany(type => UserChat, userChat => userChat.user)
+    chats: UserChat[];
 
     @OneToMany(type => File, file => file.user)
     files: File[];

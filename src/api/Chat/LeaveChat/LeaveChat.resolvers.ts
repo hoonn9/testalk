@@ -3,7 +3,6 @@ import { LeaveChatMutationArgs, LeaveChatResponse } from "../../../types/graph";
 import privateResolver from "../../../utils/privateResolver";
 import User from "../../../entities/User";
 import Chat from "../../../entities/Chat";
-import Message from "../../../entities/Message";
 
 const resolvers: Resolvers = {
     Mutation: {
@@ -15,10 +14,16 @@ const resolvers: Resolvers = {
                     const chat = await Chat.findOne({ id }, { relations: ["users"] })
                     if (chat) {
                         for (let i = 0; i < chat.users.length; i++) {
-                            if (user.id === chat.users[i].id) {
-                                const leaveMessage = await Message.create({ userId: user.id, chat, text: "", target: "LEAVE" }).save();
+                            if (user.id === chat.users[i].userId) {
+                                //const leaveMessage = await Message.create({ userId: user.id, chat, text: "", target: "LEAVE" }).save();
                                 pubSub.publish("newChatMessage", {
-                                    MessageSubscription: leaveMessage
+                                    MessageSubscription: {
+                                        userId: user.id,
+                                        chatId: chat.id,
+                                        text: "",
+                                        target: "LEAVE",
+                                        createdAt: Date.now().toString()
+                                    }
                                 })
                                 chat.remove();
                                 return {
