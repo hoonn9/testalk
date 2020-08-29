@@ -12,13 +12,12 @@ const resolvers = {
                     const {
                         MessageSubscription: { chatId }
                     } = payload;
-                    console.log("check");
 
                     try {
-                        const chat = await Chat.findOne({ id: chatId }, { relations: ["users"] });
+                        const chat = await Chat.findOne({ id: chatId });
                         if (chat) {
-                            for (let i = 0; i < chat.users.length; i++) {
-                                if (user.id === chat.users[i].userId) {
+                            for (let i = 0; i < chat.userIds.length; i++) {
+                                if (user.id === chat.userIds[i]) {
                                     return true;
                                 }
                             }

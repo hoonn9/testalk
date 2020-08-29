@@ -35,8 +35,16 @@ const appOptions: Options = {
     }
 }
 
-const handleAppStat = () => console.log(`starting on port ${PORT}`);
+const handleAppStat = ({port}): void => {
+    console.log(`starting on port ${port}`);
+    //(<any> process).send('ready') || function () {}
+};
 
-createConnection(ConnectionOptions).then(() => {
-    app.start(appOptions, handleAppStat);
+createConnection(ConnectionOptions).then(async () => {
+    await app.start(appOptions, handleAppStat);
+    // process.on("SIGINT", () => {
+    //     server.close();
+    //     process.exit();
+    // })
+    
 }).catch((error) => console.log(error));

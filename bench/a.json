@@ -1,0 +1,5 @@
+{
+  "operationName": null,
+  "variables": {},
+  "query": "{\n  GetChatUser(id: 206) {\n    ok\n    user {\n      id\n      profilePhoto {\n        url\n      }\n    }\n  }\n}\n"
+}

@@ -3,21 +3,34 @@ import { SendChatMessageMutationArgs, SendChatMessageResponse } from "../../../t
 import User from "../../../entities/User";
 import Chat from "../../../entities/Chat";
 import privateResolver from "../../../utils/privateResolver";
-import Message from "../../../entities/Message";
 import { sendFCM } from "../../../utils/sendFCM";
 import UserChat from "../../../entities/UserChat";
+import { In } from "typeorm";
 const firstMessageCash = 40;
 const resolvers: Resolvers = {
     Mutation: {
         SendChatMessage: privateResolver(async (_, args: SendChatMessageMutationArgs, { req, pubSub }): Promise<SendChatMessageResponse> => {
             const { chatId, receiveUserId, text, sendTime } = args;
             const user: User = req.user;
+
             try {
-                if (chatId) {
-                    const chat = await Chat.findOne({ id: chatId }, { relations: ["users", "users.user"] })
+                // 자기 자신에게
+                if (user.id === receiveUserId) {
+                    return {
+                        ok: false,
+                        error: null,
+                        chatId: null
+                    }
+                }
+
+                if (chatId && receiveUserId) {
+                    const chat = await Chat.findOne({ id: chatId })
+
                     if (chat) {
-                        for (let i = 0; i < chat.users.length; i++) {
-                            if (user.id === chat.users[i].userId) {
+                        if (chat.userIds.includes(user.id) && chat.userIds.includes(receiveUserId)) {
+                            
+                            const receiveUser = await User.findOne({id: receiveUserId});
+                            if (receiveUser) {
 
                                 pubSub.publish("newChatMessage", {
                                     MessageSubscription: {
@@ -28,40 +41,45 @@ const resolvers: Resolvers = {
                                         createdAt: sendTime
                                     }
                                 })
-                                for (let j = 0; j < chat.users.length; j++) {
-                                    if (j !== i) {
-                                        const profilePhoto = user.profilePhoto.length > 0 ? user.profilePhoto[0].url : "";
-                                        const userData = {
-                                            userId: user.id.toString(),
-                                            nickName: user.nickName,
-                                            birth: user.birth,
-                                            gender: user.gender,
-                                            profilePhoto,
-                                        }
-                                        sendFCM({
-                                            user: JSON.stringify(userData),
-                                            chatId: chat.id.toString(),
-                                            content: text,
-                                            createdAt: new Date(sendTime).getTime().toString()
-                                        }, chat.users[j].user.notifyId).then((response) => {
-                                            //성공
-                                        }).catch((error) => {
-                                            //실패
-                                        })
-                                    }
+
+                                const profilePhoto = user.profilePhoto.length > 0 ? user.profilePhoto[0].url : "";
+                                const userData = {
+                                    userId: user.id.toString(),
+                                    nickName: user.nickName,
+                                    birth: user.birth,
+                                    gender: user.gender,
+                                    profilePhoto,
                                 }
+                                sendFCM({
+                                    user: JSON.stringify(userData),
+                                    chatId: chat.id.toString(),
+                                    content: text,
+                                    createdAt: sendTime,
+                                }, receiveUser.notifyId).then((response) => {
+                                    //성공
+                                }).catch((error) => {
+                                    //실패
+                                })
+                            } else {
                                 return {
-                                    ok: true,
+                                    ok: false,
                                     error: null,
-                                    chatId: chat.id
+                                    chatId: null
                                 }
                             }
+                            return {
+                                ok: true,
+                                error: null,
+                                chatId: chat.id
+                            }
+                        } else {
+                            return {
+                                ok: false,
+                                error: null,
+                                chatId: null
+                            }
                         }
-                        return {
-                            ok: false,
-                            error: "Unauthorized",
-                            chatId: null
-                        }
+
                     } else {
                         return {
                             ok: false,
@@ -70,25 +88,19 @@ const resolvers: Resolvers = {
                         }
                     }
                 } else if (receiveUserId) {
-                    const receiveUser = await User.findOne({ id: receiveUserId })
+                    const receiveUser = await User.findOne({ id: receiveUserId})
+
                     if (receiveUser) {
-                        if (user.cash >= firstMessageCash) {
-                            user.cash -= firstMessageCash;
-                            user.save();
-
-                            const chat = await Chat.create().save();
-                            await UserChat.create({ user: receiveUser, chat: chat }).save()
-                            await UserChat.create({ user: user, chat: chat }).save()
-                            //chat.users.push(userChat)
-                            //chat.save()
-
-                            const message = await Message.create({
-                                text,
-                                userId: user.id,
-                                chat
-                            });
+                        const findChat = await Chat.findOne({userIds: In([`{${user.id}, ${receiveUserId}}`])});
+                        if (findChat) {
                             pubSub.publish("newChatMessage", {
-                                MessageSubscription: message
+                                MessageSubscription: {
+                                    userId: user.id,
+                                    chatId: findChat.id,
+                                    text: text,
+                                    target: "CHAT",
+                                    createdAt: sendTime
+                                }
                             })
                             const profilePhoto = user.profilePhoto.length > 0 ? user.profilePhoto[0].url : "";
                             const userData = {
@@ -100,9 +112,9 @@ const resolvers: Resolvers = {
                             }
                             sendFCM({
                                 user: JSON.stringify(userData),
-                                chatId: chat.id.toString(),
+                                chatId: findChat.id.toString(),
                                 content: text,
-                                createdAt: new Date(sendTime).getTime().toString()
+                                createdAt:sendTime
                             }, receiveUser.notifyId).then((response) => {
                                 //성공
                             }).catch((error) => {
@@ -112,15 +124,61 @@ const resolvers: Resolvers = {
                             return {
                                 ok: true,
                                 error: null,
-                                chatId: chat.id
+                                chatId: findChat.id
                             }
                         } else {
-                            return {
-                                ok: true,
-                                error: "캐시가 부족합니다.",
-                                chatId: null
+
+                            if (user.cash >= firstMessageCash) {
+                                user.cash -= firstMessageCash;
+                                user.save();
+
+                                const chat = await Chat.create({userIds: [user.id, receiveUser.id]}).save();
+                                await UserChat.create({ user: receiveUser, chat: chat }).save()
+                                await UserChat.create({ user: user, chat: chat }).save()
+                                //chat.users.push(userChat)
+                                //chat.save()
+
+                                pubSub.publish("newChatMessage", {
+                                    MessageSubscription: {
+                                        userId: user.id,
+                                        chatId: chat.id,
+                                        text: text,
+                                        target: "CHAT",
+                                        createdAt: sendTime
+                                    }
+                                })
+                                const profilePhoto = user.profilePhoto.length > 0 ? user.profilePhoto[0].url : "";
+                                const userData = {
+                                    userId: user.id.toString(),
+                                    nickName: user.nickName,
+                                    birth: user.birth,
+                                    gender: user.gender,
+                                    profilePhoto,
+                                }
+                                sendFCM({
+                                    user: JSON.stringify(userData),
+                                    chatId: chat.id.toString(),
+                                    content: text,
+                                    createdAt:sendTime
+                                }, receiveUser.notifyId).then((response) => {
+                                    //성공
+                                }).catch((error) => {
+                                    //실패
+                                })
+
+                                return {
+                                    ok: true,
+                                    error: null,
+                                    chatId: chat.id
+                                }
+                            } else {
+                                return {
+                                    ok: true,
+                                    error: "캐시가 부족합니다.",
+                                    chatId: null
+                                }
                             }
-                        }
+                        } 
                     } else {
                         return {
                             ok: false,

@@ -1,9 +1,0 @@
-type GetChatMessagesResponse {
-  ok: Boolean!
-  error: String
-  messages: [Message]
-}
-
-type Query {
-  GetChatMessages(chatId: Int!, requestTime: String): GetChatMessagesResponse!
-}

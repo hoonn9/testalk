@@ -1,4 +1,5 @@
-import { GraphQLServer, PubSub } from "graphql-yoga";
+import { GraphQLServer } from "graphql-yoga";
+import {PostgresPubSub} from "graphql-postgres-subscriptions";
 import cors from "cors";
 import helmet from "helmet";
 import logger from "morgan";
@@ -7,15 +8,28 @@ import { NextFunction, Response } from "express";
 import decodeJWT from "./utils/decodeJWT";
 import firebase from "firebase-admin";
 import { uploadController } from "./upload";
+import { Client } from "pg"
+//import {Cluster} from "cluster";
+import {cpus} from "os"
 
 const firebaseAccount = require("../testalk-2b9dc-firebase-adminsdk-icfhw-1122c70469.json");
 
 class App {
     public app: GraphQLServer;
-    public pubSub: any;;
+    public client: Client = new Client({
+        user:process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        host: process.env.DB_ENDPOINT,
+        database:  "testalk",
+        port: 5432,
+    });
+    public pubSub: PostgresPubSub;
+    public numCpus = cpus.length;
 
     constructor() {
-        this.pubSub = new PubSub();
+        console.log(this.numCpus);
+        this.dbConnection();
+        this.pubSub = new PostgresPubSub({client: this.client});
         this.app = new GraphQLServer({
             schema,
             context: req => {
@@ -27,10 +41,15 @@ class App {
                 }
             }
         });
+        
         this.middlewares();
         firebase.initializeApp({
             credential: firebase.credential.cert(firebaseAccount)
-        })
+        });
+    }
+
+    private dbConnection = async (): Promise<void> => {
+        await this.client.connect();
     }
 
     private middlewares = (): void => {

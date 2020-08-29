@@ -1,11 +1,10 @@
-type GetChatMessagesResponse {
+type GetChatUserResponse {
   ok: Boolean!
   error: String
-  messages: [Message]
+  user: User
 }
 
 type Query {
-  GetChatMessages(chatId: Int!, requestTime: String): GetChatMessagesResponse!
   GetChatUser(id: Int!): GetChatUserResponse!
   GetCommentList(id: Int!, skip: Int!, take: Int!, sort: SortTarget!): GetCommentListResponse!
   GetILikeUserList(skip: Int!, take: Int!): GetILikeUserListResponse!
@@ -17,12 +16,6 @@ type Query {
   GetMyProfile: GetMyProfileResponse!
   GetUserList(requestTime: String!, means: GetUserListMeans!, skip: Int!, take: Int!): GetUserListResponse!
   GetUserProfile(id: Int!): GetUserProfileResponse!
-}
-
-type GetChatUserResponse {
-  ok: Boolean!
-  error: String
-  user: User
 }
 
 type LeaveChatResponse {
@@ -72,6 +65,7 @@ type SendChatMessageResponse {
 type Chat {
   id: Int!
   users: [UserChat!]!
+  userIds: [Int!]!
   messages: [Message]
   createdAt: String!
   updatedAt: String
