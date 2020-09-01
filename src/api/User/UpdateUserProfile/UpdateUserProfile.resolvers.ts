@@ -1,4 +1,4 @@
-import { Resolvers } from "src/types/resolvers";
+import { Resolvers } from "../../../types/resolvers";
 import { UpdateUserProfileMutationArgs, UpdateUserProfileResponse } from "../../../types/graph";
 import User from "../../../entities/User";
 import privateResolver from "../../../utils/privateResolver";
@@ -25,26 +25,25 @@ const resolvers: Resolvers = {
                     const newPhotos = profilePhoto.filter((photo) => photo.target === "upload");
                     if (profilePhoto.length > 0) {
                         if (deletePhotos.length > 0) {
-                            const deleteKeys: Array<FindPhotoProp> = [];
-                            for (let i = 0; i < deletePhotos.length; i++) {
+                            const deleteKeys: FindPhotoProp[] = [];
+                            for(const e of deletePhotos) {
                                 deleteKeys.push({
-                                    key: deletePhotos[i].key
+                                    key: e.key
                                 })
                             }
                             const deleteUserPhotos = await File.find({ where: deleteKeys });
                             await File.remove(deleteUserPhotos);
 
-                            const deleteObjects: Array<ObjectIdentifier> = []
-                            for (let i = 0; i < deletePhotos.length; i++) {
+                            const deleteObjects: ObjectIdentifier[] = []
+                            for(const e of deletePhotos) {
                                 deleteObjects.push({
-                                    Key: deletePhotos[i].key
+                                    Key: e.key
                                 })
                             }
                             deleteObject(deleteObjects);
                         }
-
-                        for (let i = 0; i < newPhotos.length; i++) {
-                            const newPhoto = await File.create({ user, url: newPhotos[i].url, key: newPhotos[i].key }).save();
+                        for(const e of newPhotos) {
+                            const newPhoto = await File.create({ user, url: e.url, key: e.key }).save();
                             user.profilePhoto.push(newPhoto);
                         }
                     }

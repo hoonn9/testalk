@@ -1,23 +1,26 @@
 import { withFilter } from "graphql-yoga";
 import User from "../../../entities/User";
 import Chat from "../../../entities/Chat";
+import { MessageSubscriptionSubscriptionArgs } from "../../../types/graph"
+
+const newChatMessage = "newChatMessage"
 
 const resolvers = {
     Subscription: {
         MessageSubscription: {
             subscribe: withFilter(
-                (_, __, { pubSub }) => pubSub.asyncIterator("newChatMessage"),
-                async (payload, _, { currentUser }) => {
+                (_, args: MessageSubscriptionSubscriptionArgs, { pubSub }) => pubSub.asyncIterator(`${newChatMessage}.${args.chatId}`),
+                async (_, args: MessageSubscriptionSubscriptionArgs, { currentUser }) => {
                     const user: User = currentUser;
-                    const {
-                        MessageSubscription: { chatId }
-                    } = payload;
+                    // const {
+                    //     MessageSubscription: { chatId }
+                    // } = payload;
 
                     try {
-                        const chat = await Chat.findOne({ id: chatId });
+                        const chat = await Chat.findOne({ id: args.chatId });
                         if (chat) {
-                            for (let i = 0; i < chat.userIds.length; i++) {
-                                if (user.id === chat.userIds[i]) {
+                            for (const e of chat.userIds) {
+                                if (user.id === e) {
                                     return true;
                                 }
                             }
@@ -26,6 +29,7 @@ const resolvers = {
                             return false;
                         }
                     } catch (error) {
+                        console.log(error);
                         return false;
                     }
                 }

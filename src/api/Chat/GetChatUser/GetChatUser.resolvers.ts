@@ -15,13 +15,15 @@ const resolvers: Resolvers = {
                     if (chat) {
                         let isInChat = false;
                         let other: User | null = null;
-                        for (let i = 0; i < chat.users.length; i++) {
-                            if (user.id === chat.users[i].userId) {
+
+                        for (const e of chat.users) {
+                            if (user.id === e.userId) {
                                 isInChat = true;
                             } else {
-                                other = chat.users[i].user
+                                other = e.user
                             }
                         }
+                        
                         if (isInChat) {
                             if (other) {
                                 return {
@@ -69,6 +71,7 @@ const resolvers: Resolvers = {
                     }
                 }
             } catch (error) {
+                console.log(error);
                 return {
                     ok: false,
                     error: null,

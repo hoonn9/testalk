@@ -1,5 +1,4 @@
 import { GraphQLServer } from "graphql-yoga";
-import {PostgresPubSub} from "graphql-postgres-subscriptions";
 import cors from "cors";
 import helmet from "helmet";
 import logger from "morgan";
@@ -8,28 +7,27 @@ import { NextFunction, Response } from "express";
 import decodeJWT from "./utils/decodeJWT";
 import firebase from "firebase-admin";
 import { uploadController } from "./upload";
-import { Client } from "pg"
-//import {Cluster} from "cluster";
-import {cpus} from "os"
+import { RedisPubSub } from "graphql-redis-subscriptions"
+import Redis from "ioredis"
 
 const firebaseAccount = require("../testalk-2b9dc-firebase-adminsdk-icfhw-1122c70469.json");
-
+const redisOptions = {
+    host: process.env.REDIS_HOST_NAME,
+    port: parseInt(process.env.REDIS_PORT ? process.env.REDIS_PORT : "6379", 10),
+    retryStrategy: times => {
+    // reconnect after
+    return Math.min(times * 50, 2000);
+  }
+}
 class App {
     public app: GraphQLServer;
-    public client: Client = new Client({
-        user:process.env.DB_USERNAME,
-        password: process.env.DB_PASSWORD,
-        host: process.env.DB_ENDPOINT,
-        database:  "testalk",
-        port: 5432,
-    });
-    public pubSub: PostgresPubSub;
-    public numCpus = cpus.length;
+    public pubSub: RedisPubSub;
 
     constructor() {
-        console.log(this.numCpus);
-        this.dbConnection();
-        this.pubSub = new PostgresPubSub({client: this.client});
+        this.pubSub = new RedisPubSub({
+            publisher: new Redis(redisOptions),
+            subscriber: new Redis(redisOptions)
+        });
         this.app = new GraphQLServer({
             schema,
             context: req => {
@@ -48,15 +46,13 @@ class App {
         });
     }
 
-    private dbConnection = async (): Promise<void> => {
-        await this.client.connect();
-    }
 
     private middlewares = (): void => {
         this.app.express.use(cors());
         this.app.express.use(logger("dev"));
         this.app.express.use(helmet());
         this.app.express.use(this.jwt);
+        this.app.express.get("/healthCheck", this.healthCheckHandler);
         this.app.express.post("/api/upload", uploadController);
     }
 
@@ -73,6 +69,12 @@ class App {
             }
         }
         next();
+    }
+
+    private healthCheckHandler = (req, res:Response): void => {
+        res.writeHead(200, { "Content-Type": "text/html"});
+        res.write("Health check page");
+        res.end();
     }
 
     // private errorHandler = (err, req, res, next) => {

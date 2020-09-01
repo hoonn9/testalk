@@ -11,8 +11,8 @@ const resolvers: Resolvers = {
             const user: User = req.user;
             const { postId, parentId, content } = args;
 
-            if (user) {
-                try {
+            try {
+                if (user) {
                     const post = await Post.findOne({ id: postId })
                     if (post) {
                         if (parentId) {
@@ -39,16 +39,17 @@ const resolvers: Resolvers = {
                             error: null
                         }
                     }
-                } catch (error) {
+                } else {
                     return {
                         ok: false,
-                        error: null
+                        error: "Unauthorized."
                     }
                 }
-            } else {
+            } catch (error) {
+                console.log(error);
                 return {
                     ok: false,
-                    error: "Unauthorized."
+                    error: null
                 }
             }
         })

@@ -17,7 +17,7 @@ interface HotQueryProp {
 // 인기 유저 날짜 계산을 위한 수
 const hotUserCalDay = 7
 
-//const MoreThanDate = (timestamp: string) => MoreThan(format(new Date(parseInt(timestamp)), 'yyyy-MM-dd HH:mm:ss.SSSSSS'))
+// const MoreThanDate = (timestamp: string) => MoreThan(format(new Date(parseInt(timestamp)), 'yyyy-MM-dd HH:mm:ss.SSSSSS'))
 const LessThanDate = (timestamp: string) => LessThan(format(new Date(parseInt(timestamp)), 'yyyy-MM-dd HH:mm:ss.SSSSSS'))
 const resolvers: Resolvers = {
     Query: {
@@ -46,7 +46,7 @@ const resolvers: Resolvers = {
                         },
                         relations: ["profilePhoto"],
                     })
-                    //0.01 == 1.1km
+                    // 0.01 == 1.1km
                 } else if (means === "distance") {
                     const distanceUserIds: DistanceQueryProp[] = await getManager().query(`
                         SELECT "User"."id" AS "User__id", "lastLng", "lastLat",
@@ -55,11 +55,10 @@ const resolvers: Resolvers = {
 
                     const userIdArray: number[] = []
 
-                    for (let i = 0; i < distanceUserIds.length; i++) {
-                        console.log(distanceUserIds[i].User__id);
-                        userIdArray.push(distanceUserIds[i].User__id);
-
+                    for (const e of distanceUserIds) {
+                        userIdArray.push(e.User__id);
                     }
+
                     if (distanceUserIds && distanceUserIds.length > 0) {
 
                         users = await getRepository(User).find({
@@ -91,10 +90,10 @@ const resolvers: Resolvers = {
 
                     const userIdArray: number[] = []
 
-                    for (let i = 0; i < hotUserIds.length; i++) {
-                        userIdArray.push(hotUserIds[i].id);
-
+                    for(const e of hotUserIds) {
+                        userIdArray.push(e.id);
                     }
+
                     if (hotUserIds && hotUserIds.length > 0) {
 
                         users = await getRepository(User).find({

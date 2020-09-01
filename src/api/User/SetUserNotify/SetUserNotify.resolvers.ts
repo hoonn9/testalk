@@ -15,6 +15,7 @@ const resolvers: Resolvers = {
                     error: null
                 }
             } catch (error) {
+                console.log(error);
                 return {
                     ok: false,
                     error: error.message

@@ -31,6 +31,7 @@ const resolvers: Resolvers = {
                     }
                 }
             } catch (error) {
+                console.log(error);
                 return {
                     ok: false,
                     error: null

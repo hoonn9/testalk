@@ -5,7 +5,7 @@ import User from "../../../entities/User";
 import { format } from "date-fns"
 import { getRepository, LessThan } from "typeorm";
 import Post from "../../../entities/Post";
-//const MoreThanDate = (timestamp: string) => MoreThan(format(new Date(parseInt(timestamp)), 'yyyy-MM-dd HH:mm:ss.SSSSSS'))
+// const MoreThanDate = (timestamp: string) => MoreThan(format(new Date(parseInt(timestamp)), 'yyyy-MM-dd HH:mm:ss.SSSSSS'))
 const LessThanDate = (timestamp: string) => LessThan(format(new Date(parseInt(timestamp)), 'yyyy-MM-dd HH:mm:ss.SSSSSS'))
 const resolvers: Resolvers = {
     Query: {
@@ -46,6 +46,7 @@ const resolvers: Resolvers = {
                 }
 
             } catch (error) {
+                console.log(error);
                 return {
                     ok: false,
                     error: "Can not get post list",

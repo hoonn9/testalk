@@ -7,12 +7,32 @@ const resolvers: Resolvers = {
     Query: {
         GetMyProfile: privateResolver(async (_, __, { req }): Promise<GetMyProfileResponse> => {
             const user: User = req.user;
-            return {
-                ok: true,
-                error: null,
-                user,
-                likeCount: user.likes.length
+            try {
+                if (user) {
+                    return {
+                        ok: true,
+                        error: null,
+                        user,
+                        likeCount: user.likes.length
+                    }
+                } else {
+                    return {
+                        ok: false,
+                        error: null,
+                        user: null,
+                        likeCount: null
+                    }
+                }
+            } catch (error) {
+                console.log(error);
+                return {
+                    ok: false,
+                    error: null,
+                    user: null,
+                    likeCount: null
+                }
             }
+            
         })
     }
 }

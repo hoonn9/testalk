@@ -6,6 +6,8 @@ import privateResolver from "../../../utils/privateResolver";
 import { sendFCM } from "../../../utils/sendFCM";
 import UserChat from "../../../entities/UserChat";
 import { In } from "typeorm";
+
+const newChatMessage = "newChatMessage"
 const firstMessageCash = 40;
 const resolvers: Resolvers = {
     Mutation: {
@@ -32,10 +34,9 @@ const resolvers: Resolvers = {
                             const receiveUser = await User.findOne({id: receiveUserId});
                             if (receiveUser) {
 
-                                pubSub.publish("newChatMessage", {
+                                pubSub.publish(`${newChatMessage}.${chat.id}`, {
                                     MessageSubscription: {
                                         userId: user.id,
-                                        chatId: chat.id,
                                         text: text,
                                         target: "CHAT",
                                         createdAt: sendTime
@@ -56,9 +57,9 @@ const resolvers: Resolvers = {
                                     content: text,
                                     createdAt: sendTime,
                                 }, receiveUser.notifyId).then((response) => {
-                                    //성공
+                                    // 성공
                                 }).catch((error) => {
-                                    //실패
+                                    // 실패
                                 })
                             } else {
                                 return {
@@ -91,17 +92,20 @@ const resolvers: Resolvers = {
                     const receiveUser = await User.findOne({ id: receiveUserId})
 
                     if (receiveUser) {
-                        const findChat = await Chat.findOne({userIds: In([`{${user.id}, ${receiveUserId}}`])});
+                        const userIds = [user.id, receiveUser.id].sort();
+                        const findChat = await Chat.findOne({userIds: In([`{${userIds[0]}, ${userIds[1]}}`])});
+
                         if (findChat) {
-                            pubSub.publish("newChatMessage", {
+
+                            pubSub.publish(`${newChatMessage}.${findChat.id}`, {
                                 MessageSubscription: {
                                     userId: user.id,
-                                    chatId: findChat.id,
                                     text: text,
                                     target: "CHAT",
                                     createdAt: sendTime
                                 }
                             })
+
                             const profilePhoto = user.profilePhoto.length > 0 ? user.profilePhoto[0].url : "";
                             const userData = {
                                 userId: user.id.toString(),
@@ -116,9 +120,9 @@ const resolvers: Resolvers = {
                                 content: text,
                                 createdAt:sendTime
                             }, receiveUser.notifyId).then((response) => {
-                                //성공
+                                // 성공
                             }).catch((error) => {
-                                //실패
+                                // 실패
                             })
 
                             return {
@@ -131,22 +135,21 @@ const resolvers: Resolvers = {
                             if (user.cash >= firstMessageCash) {
                                 user.cash -= firstMessageCash;
                                 user.save();
-
-                                const chat = await Chat.create({userIds: [user.id, receiveUser.id]}).save();
+                                
+                                // userIds 배열은 오름차순 정렬
+                                const chat = await Chat.create({userIds: [user.id, receiveUser.id].sort()}).save();
                                 await UserChat.create({ user: receiveUser, chat: chat }).save()
                                 await UserChat.create({ user: user, chat: chat }).save()
-                                //chat.users.push(userChat)
-                                //chat.save()
 
-                                pubSub.publish("newChatMessage", {
+                                pubSub.publish(`${newChatMessage}.${chat.id}`, {
                                     MessageSubscription: {
                                         userId: user.id,
-                                        chatId: chat.id,
                                         text: text,
                                         target: "CHAT",
                                         createdAt: sendTime
                                     }
                                 })
+
                                 const profilePhoto = user.profilePhoto.length > 0 ? user.profilePhoto[0].url : "";
                                 const userData = {
                                     userId: user.id.toString(),
@@ -161,9 +164,9 @@ const resolvers: Resolvers = {
                                     content: text,
                                     createdAt:sendTime
                                 }, receiveUser.notifyId).then((response) => {
-                                    //성공
+                                    // 성공
                                 }).catch((error) => {
-                                    //실패
+                                    // 실패
                                 })
 
                                 return {

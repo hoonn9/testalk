@@ -12,5 +12,5 @@ enum MessageTarget {
 }
 
 type Subscription {
-  MessageSubscription: MessageSubscribeResponse
+  MessageSubscription(chatId: Int!): MessageSubscribeResponse
 }

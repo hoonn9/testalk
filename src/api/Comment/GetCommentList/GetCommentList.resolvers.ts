@@ -2,7 +2,6 @@ import { GetCommentListQueryArgs, GetCommentListResponse } from "../../../types/
 import { Resolvers } from "../../../types/resolvers";
 import privateResolver from "../../../utils/privateResolver";
 import User from "../../../entities/User";
-// import { getRepository, } from "typeorm";
 import Comment from "../../../entities/Comment";
 
 const resolvers: Resolvers = {
@@ -10,7 +9,7 @@ const resolvers: Resolvers = {
         GetCommentList: privateResolver(async (_, args: GetCommentListQueryArgs, { req }): Promise<GetCommentListResponse> => {
             const user: User = req.user;
             const { id, skip, take, sort } = args;
-            console.log(sort);
+
             if (!user) {
                 return {
                     ok: false,
@@ -18,21 +17,7 @@ const resolvers: Resolvers = {
                     comments: null
                 }
             }
-            // .orderBy("(CASE WHEN comment.parentId IS NULL THEN comment.id ELSE comment.parentId END)")
             try {
-                // const comments = await getRepository(Comment).createQueryBuilder("comment")
-                //     .leftJoinAndSelect("comment.user", "user")
-                //     .where("comment.postId = :postId", { postId: id })
-                //     .skip(skip)
-                //     .take(take)
-                //     .getMany().then((e) => {
-                //         console.log(e);
-                //         return e;
-                //     }).catch((e) => {
-                //         console.log(e);
-                //     });
-
-                //const comments = await getManager().query(`SELECT "Comment"."id" FROM comment Comment WHERE "Comment"."postId" = ${id}`);
                 if (sort === "ASC") {
                     const comments = await Comment.find({ where: { postId: id }, order: { parentId: "ASC", seq: "ASC" }, relations: ["user"], skip: skip, take: take })
 

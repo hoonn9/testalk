@@ -1,4 +1,4 @@
-import { Resolvers } from "src/types/resolvers";
+import { Resolvers } from "../../../types/resolvers";
 import { LoginStartPhoneVerificationMutationArgs, LoginStartPhoneVerificationResponse } from "../../../types/graph";
 import Verification from "../../../entities/Verification";
 import { sendVerificationSMS } from "../../../utils/sendSMS";
@@ -19,6 +19,7 @@ const resolvers: Resolvers = {
                     error: null
                 }
             } catch (error) {
+                console.log(error);
                 return {
                     ok: false,
                     error: null
