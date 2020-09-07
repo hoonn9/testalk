@@ -1,0 +1,13 @@
+type FindVoiceUserResponse {
+    ok: Boolean!
+    error: String
+}
+
+enum GenderTarget {
+    male
+    female
+}
+
+type Mutation {
+    FindVoiceUser(age: Int, distance: Float, gender: GenderTarget): FindVoiceUserResponse
+}

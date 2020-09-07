@@ -37,6 +37,7 @@ type Mutation {
   SignUpCompletePhoneVerification(phoneNumber: String!, key: String!, fbId: String, ggId: String, kkId: String, nickName: String!, gender: String!, birth: String!): SignUpCompletePhoneVerificationResponse!
   SignUpStartPhoneVerification(phoneNumber: String!): SignUpStartPhoneVerificationResponse!
   UpdateUserProfile(nickName: String!, intro: String!, profilePhoto: [PhotoObject!]!): UpdateUserProfileResponse!
+  FindVoiceUser(age: Int, distance: Float, gender: GenderTarget): FindVoiceUserResponse
 }
 
 type MessageSubscribeResponse {
@@ -292,6 +293,7 @@ type User {
   kkId: String
   notifyId: String
   chats: [UserChat!]
+  voices: [UserVoice!]
   files: [File!]
   likes: [Like!]
   doLikes: [Like!]
@@ -328,12 +330,50 @@ type UserChat {
   updatedAt: String
 }
 
+type UserVoice {
+  user: User!
+  userId: Int!
+  voice: Voice!
+  voiceId: Int!
+  createdAt: String!
+  updatedAt: String
+}
+
 type Verification {
   id: Int!
   target: String!
   payload: String!
   key: String!
   verified: Boolean!
+  createdAt: String!
+  updatedAt: String
+}
+
+type FindVoiceUserResponse {
+  ok: Boolean!
+  error: String
+}
+
+enum GenderTarget {
+  male
+  female
+}
+
+type Voice {
+  id: Int!
+  users: [UserVoice!]!
+  userIds: [Int!]!
+  createdAt: String!
+  updatedAt: String
+}
+
+type VoiceWait {
+  id: Int!
+  userId: Int!
+  birth: String!
+  lastLng: Float!
+  lastLat: Float!
+  gender: String!
   createdAt: String!
   updatedAt: String
 }

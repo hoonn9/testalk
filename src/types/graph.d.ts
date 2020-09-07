@@ -1,4 +1,4 @@
-export const typeDefs = ["type GetChatUserResponse {\n  ok: Boolean!\n  error: String\n  user: User\n}\n\ntype Query {\n  GetChatUser(id: Int!): GetChatUserResponse!\n  GetCommentList(id: Int!, skip: Int!, take: Int!, sort: SortTarget!): GetCommentListResponse!\n  GetILikeUserList(skip: Int!, take: Int!): GetILikeUserListResponse!\n  GetLikeMeUserList(requestTime: String!, skip: Int!, take: Int!): GetLikeMeUserListResponse!\n  GetPost(id: Int!): GetPostResponse!\n  GetPostList(requestTime: String!, means: String!, skip: Int!, take: Int!): GetPostListResponse!\n  GetCustomToken(means: CustomTokenMeansOptions!, socialId: String!): GetCustomTokenResponse!\n  GetMyChat: GetMyChatResponse!\n  GetMyProfile: GetMyProfileResponse!\n  GetUserList(requestTime: String!, means: GetUserListMeans!, skip: Int!, take: Int!): GetUserListResponse!\n  GetUserProfile(id: Int!): GetUserProfileResponse!\n}\n\ntype LeaveChatResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype Mutation {\n  LeaveChat(id: Int!): LeaveChatResponse!\n  SendChatMessage(chatId: Int, receiveUserId: Int, text: String!, sendTime: String!): SendChatMessageResponse!\n  AddComment(postId: Int!, parentId: Int, content: String!): AddCommentResponse!\n  TogglePostLike(id: Int!): TogglePostLikeResponse!\n  ToggleUserLike(id: Int!): ToggleUserLikeResponse!\n  UploadPost(title: String!, content: String!, postPhotos: [PhotoObject!]): UploadPostResponse\n  LoginCompletePhoneVerification(phoneNumber: String!, key: String!): LoginCompletePhoneVerificationResponse!\n  LoginStartPhoneVerification(phoneNumber: String!): LoginStartPhoneVerificationResponse\n  ReportMovement(lastLat: Float, lastLng: Float): ReportMovementResponse!\n  SetUserNotify(token: String!): SetUserNotifyResponse!\n  SignUpCompletePhoneVerification(phoneNumber: String!, key: String!, fbId: String, ggId: String, kkId: String, nickName: String!, gender: String!, birth: String!): SignUpCompletePhoneVerificationResponse!\n  SignUpStartPhoneVerification(phoneNumber: String!): SignUpStartPhoneVerificationResponse!\n  UpdateUserProfile(nickName: String!, intro: String!, profilePhoto: [PhotoObject!]!): UpdateUserProfileResponse!\n}\n\ntype MessageSubscribeResponse {\n  userId: Int!\n  chatId: Int!\n  text: String!\n  target: MessageTarget!\n  createdAt: String!\n}\n\nenum MessageTarget {\n  CHAT\n  LEAVE\n}\n\ntype Subscription {\n  MessageSubscription(chatId: Int!): MessageSubscribeResponse\n}\n\ntype SendChatMessageResponse {\n  ok: Boolean!\n  error: String\n  chatId: Int\n}\n\ntype Chat {\n  id: Int!\n  users: [UserChat!]!\n  userIds: [Int!]!\n  messages: [Message]\n  createdAt: String!\n  updatedAt: String\n}\n\ntype AddCommentResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype GetCommentListResponse {\n  ok: Boolean!\n  error: String\n  comments: [Comment]\n}\n\nenum SortTarget {\n  ASC\n  DESC\n}\n\ntype Comment {\n  id: Int!\n  parentId: Int\n  content: String!\n  user: User!\n  userId: Int!\n  post: Post!\n  postId: Int!\n  depth: Int!\n  seq: Int!\n  createdAt: String!\n  updatedAt: String\n}\n\ntype File {\n  id: Int!\n  user: User!\n  userId: Int!\n  post: Post\n  postId: Int\n  url: String!\n  key: String!\n  createdAt: String!\n  updatedAt: String\n}\n\ntype GetILikeUserListResponse {\n  ok: Boolean!\n  error: String\n  likes: [Like]\n}\n\ntype GetLikeMeUserListResponse {\n  ok: Boolean!\n  error: String\n  likes: [Like]\n}\n\ntype Like {\n  id: Int!\n  user: User!\n  userId: Int!\n  post: Post!\n  postId: Int!\n  likeUser: User!\n  likeUserId: Int!\n  createdAt: String!\n  updatedAt: String\n}\n\ntype TogglePostLikeResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype ToggleUserLikeResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype Message {\n  id: Int!\n  text: String!\n  userId: Int\n  chat: Chat!\n  chatId: Int\n  target: String!\n  createdAt: String!\n  updatedAt: String\n}\n\ntype GetPostResponse {\n  ok: Boolean!\n  error: String\n  post: Post\n  isLiked: Boolean\n}\n\ntype GetPostListResponse {\n  ok: Boolean!\n  error: String\n  posts: [Post]\n}\n\ntype Post {\n  id: Int!\n  title: String!\n  content: String!\n  userId: Int!\n  user: User!\n  files: [File!]\n  comments: [Comment!]\n  likes: [Like!]\n  readCount: Int!\n  likeCount: Int!\n  commentCount: Int!\n  createdAt: String!\n  updatedAt: String\n}\n\ntype UploadPostResponse {\n  ok: Boolean!\n  error: String\n}\n\nenum PhotoTarget {\n  upload\n  delete\n  upload\n  delete\n}\n\ninput PhotoObject {\n  url: String!\n  key: String!\n  target: PhotoTarget!\n  url: String!\n  key: String!\n  target: PhotoTarget!\n}\n\ntype GetCustomTokenResponse {\n  ok: Boolean!\n  error: String\n  token: String\n}\n\nenum CustomTokenMeansOptions {\n  KAKAO\n}\n\ntype GetMyChatResponse {\n  ok: Boolean!\n  error: String\n  chat: [Chat]\n}\n\ntype GetMyProfileResponse {\n  ok: Boolean!\n  error: String\n  user: User\n  likeCount: Int\n}\n\ntype GetUserListResponse {\n  ok: Boolean!\n  error: String\n  users: [User]\n  order: [Int]\n}\n\nenum GetUserListMeans {\n  login\n  distance\n  hot\n  join\n}\n\ntype GetUserProfileResponse {\n  ok: Boolean!\n  error: String\n  user: User\n  likeCount: Int\n  isLiked: Boolean\n}\n\ntype LoginCompletePhoneVerificationResponse {\n  ok: Boolean!\n  error: String\n  userId: Int\n  token: String\n}\n\ntype LoginStartPhoneVerificationResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype ReportMovementResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype SetUserNotifyResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype User {\n  id: Int!\n  nickName: String!\n  birth: String!\n  gender: String!\n  intro: String!\n  profilePhoto: [File!]\n  phoneNumber: String!\n  verifiedPhoneNumber: Boolean!\n  isOnline: Boolean!\n  lastLng: Float\n  lastLat: Float\n  fbId: String\n  ggId: String\n  kkId: String\n  notifyId: String\n  chats: [UserChat!]\n  files: [File!]\n  likes: [Like!]\n  doLikes: [Like!]\n  cash: Int!\n  posts: [Post!]\n  comments: [Comment!]\n  createdAt: String!\n  updatedAt: String\n}\n\ntype SignUpCompletePhoneVerificationResponse {\n  ok: Boolean!\n  error: String\n  userId: Int\n  token: String\n}\n\ntype SignUpStartPhoneVerificationResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype UpdateUserProfileResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype UserChat {\n  user: User!\n  userId: Int!\n  chat: Chat!\n  chatId: Int!\n  createdAt: String!\n  updatedAt: String\n}\n\ntype Verification {\n  id: Int!\n  target: String!\n  payload: String!\n  key: String!\n  verified: Boolean!\n  createdAt: String!\n  updatedAt: String\n}\n"];
+export const typeDefs = ["type GetChatUserResponse {\n  ok: Boolean!\n  error: String\n  user: User\n}\n\ntype Query {\n  GetChatUser(id: Int!): GetChatUserResponse!\n  GetCommentList(id: Int!, skip: Int!, take: Int!, sort: SortTarget!): GetCommentListResponse!\n  GetILikeUserList(skip: Int!, take: Int!): GetILikeUserListResponse!\n  GetLikeMeUserList(requestTime: String!, skip: Int!, take: Int!): GetLikeMeUserListResponse!\n  GetPost(id: Int!): GetPostResponse!\n  GetPostList(requestTime: String!, means: String!, skip: Int!, take: Int!): GetPostListResponse!\n  GetCustomToken(means: CustomTokenMeansOptions!, socialId: String!): GetCustomTokenResponse!\n  GetMyChat: GetMyChatResponse!\n  GetMyProfile: GetMyProfileResponse!\n  GetUserList(requestTime: String!, means: GetUserListMeans!, skip: Int!, take: Int!): GetUserListResponse!\n  GetUserProfile(id: Int!): GetUserProfileResponse!\n}\n\ntype LeaveChatResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype Mutation {\n  LeaveChat(id: Int!): LeaveChatResponse!\n  SendChatMessage(chatId: Int, receiveUserId: Int, text: String!, sendTime: String!): SendChatMessageResponse!\n  AddComment(postId: Int!, parentId: Int, content: String!): AddCommentResponse!\n  TogglePostLike(id: Int!): TogglePostLikeResponse!\n  ToggleUserLike(id: Int!): ToggleUserLikeResponse!\n  UploadPost(title: String!, content: String!, postPhotos: [PhotoObject!]): UploadPostResponse\n  LoginCompletePhoneVerification(phoneNumber: String!, key: String!): LoginCompletePhoneVerificationResponse!\n  LoginStartPhoneVerification(phoneNumber: String!): LoginStartPhoneVerificationResponse\n  ReportMovement(lastLat: Float, lastLng: Float): ReportMovementResponse!\n  SetUserNotify(token: String!): SetUserNotifyResponse!\n  SignUpCompletePhoneVerification(phoneNumber: String!, key: String!, fbId: String, ggId: String, kkId: String, nickName: String!, gender: String!, birth: String!): SignUpCompletePhoneVerificationResponse!\n  SignUpStartPhoneVerification(phoneNumber: String!): SignUpStartPhoneVerificationResponse!\n  UpdateUserProfile(nickName: String!, intro: String!, profilePhoto: [PhotoObject!]!): UpdateUserProfileResponse!\n  FindVoiceUser(age: Int, distance: Float, gender: GenderTarget): FindVoiceUserResponse\n}\n\ntype MessageSubscribeResponse {\n  userId: Int!\n  chatId: Int!\n  text: String!\n  target: MessageTarget!\n  createdAt: String!\n}\n\nenum MessageTarget {\n  CHAT\n  LEAVE\n}\n\ntype Subscription {\n  MessageSubscription(chatId: Int!): MessageSubscribeResponse\n}\n\ntype SendChatMessageResponse {\n  ok: Boolean!\n  error: String\n  chatId: Int\n}\n\ntype Chat {\n  id: Int!\n  users: [UserChat!]!\n  userIds: [Int!]!\n  messages: [Message]\n  createdAt: String!\n  updatedAt: String\n}\n\ntype AddCommentResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype GetCommentListResponse {\n  ok: Boolean!\n  error: String\n  comments: [Comment]\n}\n\nenum SortTarget {\n  ASC\n  DESC\n}\n\ntype Comment {\n  id: Int!\n  parentId: Int\n  content: String!\n  user: User!\n  userId: Int!\n  post: Post!\n  postId: Int!\n  depth: Int!\n  seq: Int!\n  createdAt: String!\n  updatedAt: String\n}\n\ntype File {\n  id: Int!\n  user: User!\n  userId: Int!\n  post: Post\n  postId: Int\n  url: String!\n  key: String!\n  createdAt: String!\n  updatedAt: String\n}\n\ntype GetILikeUserListResponse {\n  ok: Boolean!\n  error: String\n  likes: [Like]\n}\n\ntype GetLikeMeUserListResponse {\n  ok: Boolean!\n  error: String\n  likes: [Like]\n}\n\ntype Like {\n  id: Int!\n  user: User!\n  userId: Int!\n  post: Post!\n  postId: Int!\n  likeUser: User!\n  likeUserId: Int!\n  createdAt: String!\n  updatedAt: String\n}\n\ntype TogglePostLikeResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype ToggleUserLikeResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype Message {\n  id: Int!\n  text: String!\n  userId: Int\n  chat: Chat!\n  chatId: Int\n  target: String!\n  createdAt: String!\n  updatedAt: String\n}\n\ntype GetPostResponse {\n  ok: Boolean!\n  error: String\n  post: Post\n  isLiked: Boolean\n}\n\ntype GetPostListResponse {\n  ok: Boolean!\n  error: String\n  posts: [Post]\n}\n\ntype Post {\n  id: Int!\n  title: String!\n  content: String!\n  userId: Int!\n  user: User!\n  files: [File!]\n  comments: [Comment!]\n  likes: [Like!]\n  readCount: Int!\n  likeCount: Int!\n  commentCount: Int!\n  createdAt: String!\n  updatedAt: String\n}\n\ntype UploadPostResponse {\n  ok: Boolean!\n  error: String\n}\n\nenum PhotoTarget {\n  upload\n  delete\n  upload\n  delete\n}\n\ninput PhotoObject {\n  url: String!\n  key: String!\n  target: PhotoTarget!\n  url: String!\n  key: String!\n  target: PhotoTarget!\n}\n\ntype GetCustomTokenResponse {\n  ok: Boolean!\n  error: String\n  token: String\n}\n\nenum CustomTokenMeansOptions {\n  KAKAO\n}\n\ntype GetMyChatResponse {\n  ok: Boolean!\n  error: String\n  chat: [Chat]\n}\n\ntype GetMyProfileResponse {\n  ok: Boolean!\n  error: String\n  user: User\n  likeCount: Int\n}\n\ntype GetUserListResponse {\n  ok: Boolean!\n  error: String\n  users: [User]\n  order: [Int]\n}\n\nenum GetUserListMeans {\n  login\n  distance\n  hot\n  join\n}\n\ntype GetUserProfileResponse {\n  ok: Boolean!\n  error: String\n  user: User\n  likeCount: Int\n  isLiked: Boolean\n}\n\ntype LoginCompletePhoneVerificationResponse {\n  ok: Boolean!\n  error: String\n  userId: Int\n  token: String\n}\n\ntype LoginStartPhoneVerificationResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype ReportMovementResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype SetUserNotifyResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype User {\n  id: Int!\n  nickName: String!\n  birth: String!\n  gender: String!\n  intro: String!\n  profilePhoto: [File!]\n  phoneNumber: String!\n  verifiedPhoneNumber: Boolean!\n  isOnline: Boolean!\n  lastLng: Float\n  lastLat: Float\n  fbId: String\n  ggId: String\n  kkId: String\n  notifyId: String\n  chats: [UserChat!]\n  voices: [UserVoice!]\n  files: [File!]\n  likes: [Like!]\n  doLikes: [Like!]\n  cash: Int!\n  posts: [Post!]\n  comments: [Comment!]\n  createdAt: String!\n  updatedAt: String\n}\n\ntype SignUpCompletePhoneVerificationResponse {\n  ok: Boolean!\n  error: String\n  userId: Int\n  token: String\n}\n\ntype SignUpStartPhoneVerificationResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype UpdateUserProfileResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype UserChat {\n  user: User!\n  userId: Int!\n  chat: Chat!\n  chatId: Int!\n  createdAt: String!\n  updatedAt: String\n}\n\ntype UserVoice {\n  user: User!\n  userId: Int!\n  voice: Voice!\n  voiceId: Int!\n  createdAt: String!\n  updatedAt: String\n}\n\ntype Verification {\n  id: Int!\n  target: String!\n  payload: String!\n  key: String!\n  verified: Boolean!\n  createdAt: String!\n  updatedAt: String\n}\n\ntype FindVoiceUserResponse {\n  ok: Boolean!\n  error: String\n}\n\nenum GenderTarget {\n  male\n  female\n}\n\ntype Voice {\n  id: Int!\n  users: [UserVoice!]!\n  userIds: [Int!]!\n  createdAt: String!\n  updatedAt: String\n}\n\ntype VoiceWait {\n  id: Int!\n  userId: Int!\n  birth: String!\n  lastLng: Float!\n  lastLat: Float!\n  gender: String!\n  createdAt: String!\n  updatedAt: String\n}\n"];
 /* tslint:disable */
 
 export interface Query {
@@ -87,6 +87,7 @@ export interface User {
   kkId: string | null;
   notifyId: string | null;
   chats: Array<UserChat>;
+  voices: Array<UserVoice>;
   files: Array<File>;
   likes: Array<Like>;
   doLikes: Array<Like>;
@@ -180,6 +181,23 @@ export interface Message {
   updatedAt: string | null;
 }
 
+export interface UserVoice {
+  user: User;
+  userId: number;
+  voice: Voice;
+  voiceId: number;
+  createdAt: string;
+  updatedAt: string | null;
+}
+
+export interface Voice {
+  id: number;
+  users: Array<UserVoice>;
+  userIds: Array<number>;
+  createdAt: string;
+  updatedAt: string | null;
+}
+
 export type SortTarget = "ASC" | "DESC";
 
 export interface GetCommentListResponse {
@@ -265,6 +283,7 @@ export interface Mutation {
   SignUpCompletePhoneVerification: SignUpCompletePhoneVerificationResponse;
   SignUpStartPhoneVerification: SignUpStartPhoneVerificationResponse;
   UpdateUserProfile: UpdateUserProfileResponse;
+  FindVoiceUser: FindVoiceUserResponse | null;
 }
 
 export interface LeaveChatMutationArgs {
@@ -335,6 +354,12 @@ export interface UpdateUserProfileMutationArgs {
   nickName: string;
   intro: string;
   profilePhoto: Array<PhotoObject>;
+}
+
+export interface FindVoiceUserMutationArgs {
+  age: number | null;
+  distance: number | null;
+  gender: GenderTarget | null;
 }
 
 export interface LeaveChatResponse {
@@ -415,6 +440,13 @@ export interface UpdateUserProfileResponse {
   error: string | null;
 }
 
+export type GenderTarget = "male" | "female";
+
+export interface FindVoiceUserResponse {
+  ok: boolean;
+  error: string | null;
+}
+
 export interface Subscription {
   MessageSubscription: MessageSubscribeResponse | null;
 }
@@ -439,6 +471,17 @@ export interface Verification {
   payload: string;
   key: string;
   verified: boolean;
+  createdAt: string;
+  updatedAt: string | null;
+}
+
+export interface VoiceWait {
+  id: number;
+  userId: number;
+  birth: string;
+  lastLng: number;
+  lastLat: number;
+  gender: string;
   createdAt: string;
   updatedAt: string | null;
 }

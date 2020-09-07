@@ -1,0 +1,7 @@
+type Voice {
+    id: Int!
+    users: [UserVoice!]!
+    userIds: [Int!]!
+    createdAt: String!
+    updatedAt: String
+}

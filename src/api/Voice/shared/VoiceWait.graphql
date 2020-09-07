@@ -1,0 +1,10 @@
+type VoiceWait {
+    id: Int!
+    userId: Int!
+    birth: String!
+    lastLng: Float!
+    lastLat: Float!
+    gender: String!
+    createdAt: String!
+    updatedAt: String
+}
