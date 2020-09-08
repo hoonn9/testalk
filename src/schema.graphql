@@ -16,6 +16,7 @@ type Query {
   GetMyProfile: GetMyProfileResponse!
   GetUserList(requestTime: String!, means: GetUserListMeans!, skip: Int!, take: Int!): GetUserListResponse!
   GetUserProfile(id: Int!): GetUserProfileResponse!
+  GetRtcToken(channelName: String!): GetRtcTokenResponse!
 }
 
 type LeaveChatResponse {
@@ -37,7 +38,7 @@ type Mutation {
   SignUpCompletePhoneVerification(phoneNumber: String!, key: String!, fbId: String, ggId: String, kkId: String, nickName: String!, gender: String!, birth: String!): SignUpCompletePhoneVerificationResponse!
   SignUpStartPhoneVerification(phoneNumber: String!): SignUpStartPhoneVerificationResponse!
   UpdateUserProfile(nickName: String!, intro: String!, profilePhoto: [PhotoObject!]!): UpdateUserProfileResponse!
-  FindVoiceUser(age: Int, distance: Float, gender: GenderTarget): FindVoiceUserResponse
+  FindVoiceUser(age: Int, distance: Float, gender: GenderTarget): FindVoiceUserResponse!
 }
 
 type MessageSubscribeResponse {
@@ -55,6 +56,7 @@ enum MessageTarget {
 
 type Subscription {
   MessageSubscription(chatId: Int!): MessageSubscribeResponse
+  VoiceSubscription: VoiceSubscriptionResponse!
 }
 
 type SendChatMessageResponse {
@@ -352,6 +354,7 @@ type Verification {
 type FindVoiceUserResponse {
   ok: Boolean!
   error: String
+  channelName: String
 }
 
 enum GenderTarget {
@@ -359,10 +362,17 @@ enum GenderTarget {
   female
 }
 
+type GetRtcTokenResponse {
+  ok: Boolean!
+  error: String
+  token: String
+}
+
 type Voice {
   id: Int!
   users: [UserVoice!]!
   userIds: [Int!]!
+  channelName: String!
   createdAt: String!
   updatedAt: String
 }
@@ -376,4 +386,10 @@ type VoiceWait {
   gender: String!
   createdAt: String!
   updatedAt: String
+}
+
+type VoiceSubscriptionResponse {
+  targetUserId: Int!
+  channelName: String!
+  createdAt: String!
 }

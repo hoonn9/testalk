@@ -19,8 +19,19 @@ class Voice extends BaseEntity {
     @Column('int', { array: true })
     userIds: number[];
 
+    @Column('text')
+    channelName: string;
+
     @CreateDateColumn() createdAt: string;
     @UpdateDateColumn() updatedAt: string;
+
+    // @AfterInsert()
+    // async initChannelName(): Promise<void> {
+    //     if (this.userIds) {
+    //         this.channelName = `${this.userIds[0]}:${this.userIds[1]}`;
+    //         this.save();
+    //     }
+    // }
 }
 
 export default Voice;

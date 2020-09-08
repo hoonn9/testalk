@@ -1,0 +1,9 @@
+type VoiceSubscriptionResponse {
+    targetUserId: Int!
+    channelName: String!
+    createdAt: String!
+}
+
+type Subscription {
+    VoiceSubscription: VoiceSubscriptionResponse!
+}

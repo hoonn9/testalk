@@ -1,6 +1,7 @@
 type FindVoiceUserResponse {
     ok: Boolean!
     error: String
+    channelName: String
 }
 
 enum GenderTarget {
@@ -9,5 +10,5 @@ enum GenderTarget {
 }
 
 type Mutation {
-    FindVoiceUser(age: Int, distance: Float, gender: GenderTarget): FindVoiceUserResponse
+    FindVoiceUser(age: Int, distance: Float, gender: GenderTarget): FindVoiceUserResponse!
 }

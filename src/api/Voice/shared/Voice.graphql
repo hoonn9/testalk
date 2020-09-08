@@ -2,6 +2,7 @@ type Voice {
     id: Int!
     users: [UserVoice!]!
     userIds: [Int!]!
+    channelName: String!
     createdAt: String!
     updatedAt: String
 }
