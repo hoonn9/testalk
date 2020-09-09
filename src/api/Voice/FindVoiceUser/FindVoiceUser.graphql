@@ -7,8 +7,9 @@ type FindVoiceUserResponse {
 enum GenderTarget {
     male
     female
+    any
 }
 
 type Mutation {
-    FindVoiceUser(age: Int, distance: Float, gender: GenderTarget): FindVoiceUserResponse!
+    FindVoiceUser(age: Int, distance: Float, gender: GenderTarget!): FindVoiceUserResponse!
 }

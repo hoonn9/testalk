@@ -1,0 +1,8 @@
+type RemoveVoiceWaitResponse {
+    ok: Boolean!
+    error: String
+}
+
+type Mutation {
+    RemoveVoiceWait: RemoveVoiceWaitResponse!
+}

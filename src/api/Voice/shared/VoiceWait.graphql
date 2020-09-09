@@ -1,10 +1,13 @@
 type VoiceWait {
     id: Int!
     userId: Int!
+    gender: String!
     birth: String!
     lastLng: Float!
     lastLat: Float!
-    gender: String!
+    wantGender: String!
+    wantAge: String!
+    wantDistance: Float!
     createdAt: String!
     updatedAt: String
 }

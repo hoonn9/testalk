@@ -2,6 +2,7 @@ import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, U
 
 const MALE = 'male';
 const FEMALE = 'female';
+const ANY = 'any';
 
 @Entity()
 class VoiceWait extends BaseEntity {
@@ -13,7 +14,7 @@ class VoiceWait extends BaseEntity {
     @Column({ type: 'timestamp' })
     birth: string;
 
-    @Column({ type: 'text', enum: [MALE, FEMALE] })
+    @Column({ type: 'text', enum: [MALE, FEMALE, ANY] })
     gender: string;
 
     @Column({ type: 'double precision', default: 0 })
@@ -21,6 +22,15 @@ class VoiceWait extends BaseEntity {
 
     @Column({ type: 'double precision', default: 0 })
     lastLat: number;
+
+    @Column({ type: 'text', enum: [MALE, FEMALE, ANY] })
+    wantGender: string;
+
+    @Column({ type: 'interval' })
+    wantAge: string;
+
+    @Column({ type: 'double precision' })
+    wantDistance: number;
 
     @CreateDateColumn() createdAt: string;
     @UpdateDateColumn() updatedAt: string;

@@ -6,6 +6,7 @@ import User from '../../../entities/User';
 import Voice from '../../../entities/Voice';
 import UserVoice from '../../../entities/UserVoice';
 import VoiceWait from '../../../entities/VoiceWait';
+import { timestampConverter } from '../../../utils';
 
 interface VoiceWaitProp {
     id: number;
@@ -14,26 +15,13 @@ interface VoiceWaitProp {
 
 const newVoiceUser = 'newVoiceUser';
 
-const thisYear = (year: number) => {
-    const date = new Date();
-    console.log(date);
-    date.setHours(0);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    date.setMilliseconds(0);
-    date.setFullYear(date.getFullYear() - year);
-    return `${date.getFullYear()}-${
-        date.getMonth() + 1
-    }-${date.getDay()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-};
-
 const resolvers: Resolvers = {
     Mutation: {
         FindVoiceUser: privateResolver(
             async (_, args: FindVoiceUserMutationArgs, { req, pubSub }): Promise<FindVoiceUserResponse> => {
                 const { gender, age, distance } = args;
                 const user: User = req.user;
-
+                console.log(gender, age, distance);
                 if (!user) {
                     return {
                         ok: false,
@@ -43,23 +31,36 @@ const resolvers: Resolvers = {
                 }
 
                 try {
-                    let where = `WHERE "userId" != ${user.id} `;
+                    let where = `WHERE "userId" != ${user.id} AND ("wantGender" = '${
+                        user.gender
+                    }' OR "wantGender" = 'any') 
+                    AND calculate_distance(${user.lastLat}, ${
+                        user.lastLng
+                    }, "lastLat", "lastLng", 'M') < "wantDistance" 
+                    AND ("wantAge" = '0 years' OR AGE(timestamp '${timestampConverter(
+                        user.birth
+                    )}') BETWEEN "wantAge" AND "wantAge" + '9 years')`;
 
                     if (gender || distance || age) {
                         const options: string[] = [];
+                        where += ' AND ';
 
                         if (gender) {
-                            options.push(`gender = '${gender}'`);
+                            if (gender === 'any') {
+                                options.push(`(gender = 'male' OR gender = 'female')`);
+                            } else {
+                                options.push(`gender = '${gender}'`);
+                            }
                         }
 
                         if (distance) {
                             options.push(
-                                `calculate_distance(${user.lastLng}, ${user.lastLat}, "lastLat", "lastLng", 'M') < ${distance}`
+                                `calculate_distance(${user.lastLat}, ${user.lastLng}, "lastLat", "lastLng", 'M') < ${distance}`
                             );
                         }
 
                         if (age) {
-                            options.push(`birth BETWEEN '${thisYear(age)}'::timestamp AND '${thisYear(0)}'::timestamp`);
+                            options.push(`AGE(birth) BETWEEN '${age} years' AND '${age + 9} years'`);
                         }
 
                         for (let i = 0; i < options.length; i++) {
@@ -126,6 +127,9 @@ const resolvers: Resolvers = {
                             lastLng: user.lastLng,
                             lastLat: user.lastLat,
                             gender: user.gender,
+                            wantGender: gender,
+                            wantAge: age && age > 0 ? `${age} years` : `${0} years`,
+                            wantDistance: distance && distance > 0 ? distance : 0,
                         }).save();
 
                         return {
